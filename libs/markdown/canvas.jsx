@@ -45,6 +45,7 @@ export default class Canvas extends React.Component {
         argv
       }
     }).then(({ args, argv }) => {
+        debugger;
       const code = transform(`
         class Demo extends React.Component {
           ${value}
@@ -54,7 +55,6 @@ export default class Canvas extends React.Component {
       `, {
         presets: ['es2015', 'react']
       }).code
-
       args.push(code)
 
       new Function(...args).apply(null, argv)

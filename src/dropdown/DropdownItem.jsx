@@ -5,6 +5,7 @@ import { Component, PropTypes } from '../../libs';
 
 export default class DropdownItem extends Component {
   handleClick(): void {
+    debugger
     this.context.component.handleMenuItemClick(this.props.command, this);
   }
 
@@ -25,9 +26,9 @@ export default class DropdownItem extends Component {
   }
 }
 
-DropdownItem.contextTypes = {
-  component: PropTypes.any
-};
+// DropdownItem.contextTypes = {
+//   component: PropTypes.any
+// };
 
 DropdownItem.propTypes = {
   command: PropTypes.string,

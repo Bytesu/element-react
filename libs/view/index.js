@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-export default class View extends Component {
-  render() {
-    const classNames = [];
-    const { show = true, className = '', children } = this.props;
-    const mixed = { style: { ...children.props.style } };
-    if (!show) mixed.style.display = 'none';
-    if (children.props.className) classNames.push(children.props.className);
-    if (className) classNames.push(className);
-    mixed.className = classNames.join(' ');
-
-    return React.cloneElement(React.Children.only(children), mixed);
-  }
-}
+/**
+ * 透传ref
+ * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<{}> & React.RefAttributes<unknown>>}
+ */
+const View = React.forwardRef((props, ref) => {
+  const classNames = [];
+  const {show = true, className = '', children} = props;
+  const mixed = {style: {...children.props.style, ref}};
+  if (!show) mixed.style.display = 'none';
+  if (children.props.className) classNames.push(children.props.className);
+  if (className) classNames.push(className);
+  mixed.className = classNames.join(' ');
+  return React.cloneElement(React.Children.only(children), mixed);
+})
 
 /* eslint-disable */
 View.propTypes = {
@@ -22,3 +23,4 @@ View.propTypes = {
 /* eslint-enable */
 
 View._typeName = 'View';
+export default View

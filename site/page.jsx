@@ -20,7 +20,6 @@ export default class App extends React.Component {
   componentWillMount() {
     window.addEventListener("hashchange", () => {
       window.scrollTo(0, 0);
-
       this.setPage();
     }, false);
   }

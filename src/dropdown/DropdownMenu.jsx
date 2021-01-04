@@ -4,13 +4,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Popper from 'popper.js';
 import { Component, PropTypes, Transition, View } from '../../libs';
-
+import {Context} from './DropDown'
 type State = {
   showPopper: boolean
 };
 
 export default class DropdownMenu extends Component {
   state: State;
+  static contextType = Context;
 
   constructor(props: Object) {
     super(props);
@@ -44,6 +45,7 @@ export default class DropdownMenu extends Component {
   }
 
   parent(): Component {
+
     return this.context.component;
   }
 
@@ -53,7 +55,11 @@ export default class DropdownMenu extends Component {
 
   render(): React.DOM {
     return (
-      <Transition name="el-zoom-in-top" onEnter={this.onEnter.bind(this)} onAfterLeave={this.onAfterLeave.bind(this)}>
+      <Transition
+        name="el-zoom-in-top"
+        onEnter={this.onEnter.bind(this)}
+        onAfterLeave={this.onAfterLeave.bind(this)}
+      >
         <View show={this.state.showPopper}>
           <ul ref="popper" style={this.style()} className={this.className('el-dropdown-menu')}>
             {this.props.children}
@@ -64,6 +70,6 @@ export default class DropdownMenu extends Component {
   }
 }
 
-DropdownMenu.contextTypes = {
-  component: PropTypes.any
-};
+// DropdownMenu.contextTypes = {
+//   component: PropTypes.any
+// };

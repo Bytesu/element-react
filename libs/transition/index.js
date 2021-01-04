@@ -1,6 +1,5 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import requestAnimationFrame from 'raf';
 
@@ -10,9 +9,8 @@ import requestAnimationFrame from 'raf';
 export default class Transition extends Component {
   constructor(props) {
     super(props);
-
-    const { children } = props;
-
+    const {children, domRef} = props;
+    this.el = domRef;
     this.state = {
       children: children && this.enhanceChildren(children)
     }
@@ -20,6 +18,20 @@ export default class Transition extends Component {
     this.didEnter = this.didEnter.bind(this);
     this.didLeave = this.didLeave.bind(this);
   }
+
+  get transitionClass() {
+    const {name} = this.props;
+
+    return {
+      enter: `${name}-enter`,
+      enterActive: `${name}-enter-active`,
+      enterTo: `${name}-enter-to`,
+      leave: `${name}-leave`,
+      leaveActive: `${name}-leave-active`,
+      leaveTo: `${name}-leave-to`,
+    }
+  }
+
 
   componentWillReceiveProps(nextProps) {
     const children = React.isValidElement(this.props.children) && React.Children.only(this.props.children);
@@ -34,7 +46,7 @@ export default class Transition extends Component {
 
     if (this.isViewComponent(nextChildren)) {
       this.setState({
-        children: this.enhanceChildren(nextChildren, { show: children ? children.props.show : true })
+        children: this.enhanceChildren(nextChildren, {show: children ? children.props.show : true})
       })
     } else {
       if (nextChildren) {
@@ -68,20 +80,8 @@ export default class Transition extends Component {
   }
 
   enhanceChildren(children, props) {
-    return React.cloneElement(children, Object.assign({ ref: (el) => { this.el = el } }, props))
-  }
-
-  get transitionClass() {
-    const { name } = this.props;
-
-    return {
-      enter: `${name}-enter`,
-      enterActive: `${name}-enter-active`,
-      enterTo: `${name}-enter-to`,
-      leave: `${name}-leave`,
-      leaveActive: `${name}-leave-active`,
-      leaveTo: `${name}-leave-to`,
-    }
+    return React.cloneElement(children, Object.assign({}, props))
+    // return children;
   }
 
   isViewComponent(element) {
@@ -113,12 +113,12 @@ export default class Transition extends Component {
   }
 
   didEnter(e) {
-    const childDOM = ReactDOM.findDOMNode(this.el);
+    const childDOM = this.el.currrent;// ReactDOM.findDOMNode(this.el);
 
     if (!e || e.target !== childDOM) return;
 
-    const { onAfterEnter } = this.props;
-    const { enterActive, enterTo } = this.transitionClass;
+    const {onAfterEnter} = this.props;
+    const {enterActive, enterTo} = this.transitionClass;
 
     childDOM.classList.remove(enterActive, enterTo);
 
@@ -129,11 +129,11 @@ export default class Transition extends Component {
   }
 
   didLeave(e) {
-    const childDOM = ReactDOM.findDOMNode(this.el);
+    const childDOM = this.el.current;// ReactDOM.findDOMNode(this.el);
     if (!e || e.target !== childDOM) return;
 
-    const { onAfterLeave, children } = this.props;
-    const { leaveActive, leaveTo } = this.transitionClass;
+    const {onAfterLeave, children} = this.props;
+    const {leaveActive, leaveTo} = this.transitionClass;
 
     new Promise((resolve) => {
       if (this.isViewComponent(children)) {
@@ -147,7 +147,7 @@ export default class Transition extends Component {
           requestAnimationFrame(resolve);
         })
       } else {
-        this.setState({ children: null }, resolve);
+        this.setState({children: null}, resolve);
       }
     }).then(() => {
       onAfterLeave && onAfterLeave()
@@ -155,9 +155,9 @@ export default class Transition extends Component {
   }
 
   toggleVisible() {
-    const { onEnter } = this.props;
-    const { enter, enterActive, enterTo, leaveActive, leaveTo } = this.transitionClass;
-    const childDOM = ReactDOM.findDOMNode(this.el);
+    const {onEnter} = this.props;
+    const {enter, enterActive, enterTo, leaveActive, leaveTo} = this.transitionClass;
+    const childDOM = this.el.current;//ReactDOM.findDOMNode(this.el); //this.el.current
 
     childDOM.addEventListener('transitionend', this.didEnter);
     childDOM.addEventListener('animationend', this.didEnter);
@@ -186,9 +186,9 @@ export default class Transition extends Component {
   }
 
   toggleHidden() {
-    const { onLeave } = this.props;
-    const { leave, leaveActive, leaveTo, enterActive, enterTo } = this.transitionClass;
-    const childDOM = ReactDOM.findDOMNode(this.el);
+    const {onLeave} = this.props;
+    const {leave, leaveActive, leaveTo, enterActive, enterTo} = this.transitionClass;
+    const childDOM = this.el.current;//ReactDOM.findDOMNode(this.el);
 
     childDOM.addEventListener('transitionend', this.didLeave);
     childDOM.addEventListener('animationend', this.didLeave);
@@ -216,7 +216,7 @@ export default class Transition extends Component {
   }
 
   render() {
-   return this.state.children || null;
+    return this.state.children || null;
   }
 }
 
