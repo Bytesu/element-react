@@ -1,16 +1,16 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes } from '../../libs';
+import {Component, PropTypes} from '../../libs';
+import {ParentContext} from './ParentContext';
 
 export default class DropdownItem extends Component {
   handleClick(): void {
-    debugger
-    this.context.component.handleMenuItemClick(this.props.command, this);
+    this.context.parent.handleMenuItemClick(this.props.command, this);
   }
 
   render(): React.DOM {
-    const { disabled, divided } = this.props;
+    const {disabled, divided} = this.props;
 
     return (
       <li
@@ -20,15 +20,13 @@ export default class DropdownItem extends Component {
           'el-dropdown-menu__item--divided': divided
         })} onClick={this.handleClick.bind(this)}
       >
-        { this.props.children }
+        {this.props.children}
       </li>
     )
   }
 }
 
-// DropdownItem.contextTypes = {
-//   component: PropTypes.any
-// };
+DropdownItem.contextType = ParentContext;
 
 DropdownItem.propTypes = {
   command: PropTypes.string,

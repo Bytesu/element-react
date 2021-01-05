@@ -1,5 +1,5 @@
 import Dropdown from './Dropdown';
-import DropdownMenu from './DropdownMenuV2';
+import DropdownMenu from './DropdownMenu';
 import DropdownItem from './DropdownItem';
 
 Dropdown.Item = DropdownItem;

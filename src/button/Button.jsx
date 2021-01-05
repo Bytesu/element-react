@@ -4,6 +4,10 @@ import React from 'react';
 import { Component, PropTypes } from '../../libs';
 
 export default class Button extends Component {
+  constructor(props){
+    super(props);
+    this.state= {};
+  }
   onClick(e: SyntheticEvent<any>): void {
     if (!this.props.loading) {
       this.props.onClick && this.props.onClick(e);
@@ -12,7 +16,9 @@ export default class Button extends Component {
 
   render(): React.DOM {
     return (
-      <button style={this.style()} className={this.className('el-button', this.props.type && `el-button--${this.props.type}`, this.props.size && `el-button--${this.props.size}`, {
+      <button
+        ref={this.domRef}
+        style={this.style()} className={this.className('el-button', this.props.type && `el-button--${this.props.type}`, this.props.size && `el-button--${this.props.size}`, {
           'is-disabled': this.props.disabled,
           'is-loading': this.props.loading,
           'is-plain': this.props.plain

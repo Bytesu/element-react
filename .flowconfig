@@ -2,9 +2,9 @@
 .*/node_modules/.*
 
 [include]
+../test
 
 [libs]
 flow
 
 [options]
-esproposal.class_static_fields=enable

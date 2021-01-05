@@ -1,75 +1,59 @@
 /* @flow */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, {useContext, useImperativeHandle, useRef, useState} from 'react';
 import Popper from 'popper.js';
-import { Component, PropTypes, Transition, View } from '../../libs';
-import {Context} from './DropDown'
+import {Transition, View} from '../../libs';
+import {ParentContext} from './ParentContext'
+import {classNameFn, styleFn} from '../../libs/component/'
+
 type State = {
   showPopper: boolean
 };
 
-export default class DropdownMenu extends Component {
-  state: State;
-  static contextType = Context;
-
-  constructor(props: Object) {
-    super(props);
-
-    this.state = {
-      showPopper: false
-    }
-  }
-
-  onVisibleChange(visible: boolean): void {
-    this.setState({
-      showPopper: visible
-    })
-  }
-
-  onEnter(): void {
-    const parent = ReactDOM.findDOMNode(this.parent());
-
-    this.popperJS = new Popper(parent, this.refs.popper, {
-      placement: this.placement(),
+const DropdownMenu = React.forwardRef((props, ref) => {
+  const [visible, setVisible] = useState(false);
+  const _ref = useRef(null);
+  const self = this;
+  var popperJS = null;
+  const parent = useContext(ParentContext);
+  const onEnter = (): void => {
+    const parent = parent.parentDomRef.current;//ReactDOM.findDOMNode(context);
+    popperJS = new Popper(parent, _ref.current, {
+      placement: `bottom-${parent.menuAlign}`,
       modifiers: {
         computeStyle: {
           gpuAcceleration: false
         }
       }
-    });
+    })
   }
+  // const ref1 =  createRef();
+  useImperativeHandle(ref, () => ({
+    onVisibleChange: (visible) => {
+      setVisible(visible);
+    },
+    domRef: _ref
+  }));
 
-  onAfterLeave(): void {
-    this.popperJS.destroy();
+  const onAfterLeave = (): void => {
+    popperJS && popperJS.destroy();
   }
-
-  parent(): Component {
-
-    return this.context.component;
-  }
-
-  placement(): string {
-    return `bottom-${this.parent().props.menuAlign}`;
-  }
-
-  render(): React.DOM {
-    return (
-      <Transition
-        name="el-zoom-in-top"
-        onEnter={this.onEnter.bind(this)}
-        onAfterLeave={this.onAfterLeave.bind(this)}
+  return <Transition
+    name="el-zoom-in-top"
+    domRef={_ref}
+    {...{onEnter, onAfterLeave}}
+  >
+    <View
+      show={visible}
+    >
+      <ul
+        ref={_ref}
+        style={styleFn(props)}
+        className={classNameFn(props, 'el-dropdown-menu')}
       >
-        <View show={this.state.showPopper}>
-          <ul ref="popper" style={this.style()} className={this.className('el-dropdown-menu')}>
-            {this.props.children}
-          </ul>
-        </View>
-      </Transition>
-    )
-  }
-}
-
-// DropdownMenu.contextTypes = {
-//   component: PropTypes.any
-// };
+        {props.children}
+      </ul>
+    </View>
+  </Transition>;
+})
+export default DropdownMenu;

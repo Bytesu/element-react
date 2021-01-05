@@ -11,6 +11,7 @@ export default class Transition extends Component {
     super(props);
     const {children, domRef} = props;
     this.el = domRef;
+    // domRef
     this.state = {
       children: children && this.enhanceChildren(children)
     }
@@ -157,32 +158,34 @@ export default class Transition extends Component {
   toggleVisible() {
     const {onEnter} = this.props;
     const {enter, enterActive, enterTo, leaveActive, leaveTo} = this.transitionClass;
-    const childDOM = this.el.current;//ReactDOM.findDOMNode(this.el); //this.el.current
+    if (this.el) {
+      const childDOM = this.el.current;//ReactDOM.findDOMNode(this.el); //this.el.current
 
-    childDOM.addEventListener('transitionend', this.didEnter);
-    childDOM.addEventListener('animationend', this.didEnter);
+      childDOM.addEventListener('transitionend', this.didEnter);
+      childDOM.addEventListener('animationend', this.didEnter);
 
-    // this.animateElement(childDOM, enter, enterActive, this.didEnter);
-
-    requestAnimationFrame(() => {
-      // when hidden transition not end
-      if (childDOM.classList.contains(leaveActive)) {
-        childDOM.classList.remove(leaveActive, leaveTo);
-
-        childDOM.removeEventListener('transitionend', this.didLeave);
-        childDOM.removeEventListener('animationend', this.didLeave);
-      }
-
-      childDOM.style.display = '';
-      childDOM.classList.add(enter, enterActive);
-
-      onEnter && onEnter();
+      // this.animateElement(childDOM, enter, enterActive, this.didEnter);
 
       requestAnimationFrame(() => {
-        childDOM.classList.remove(enter);
-        childDOM.classList.add(enterTo);
+        // when hidden transition not end
+        if (childDOM.classList.contains(leaveActive)) {
+          childDOM.classList.remove(leaveActive, leaveTo);
+
+          childDOM.removeEventListener('transitionend', this.didLeave);
+          childDOM.removeEventListener('animationend', this.didLeave);
+        }
+
+        childDOM.style.display = '';
+        childDOM.classList.add(enter, enterActive);
+
+        onEnter && onEnter();
+
+        requestAnimationFrame(() => {
+          childDOM.classList.remove(enter);
+          childDOM.classList.add(enterTo);
+        })
       })
-    })
+    }
   }
 
   toggleHidden() {

@@ -1,16 +1,15 @@
 /* @flow */
 
-import React, {createContext} from 'react';
+import React from 'react';
 import ClickOutside from 'react-click-outside';
 import {Component, PropTypes} from '../../libs';
-import DropdownMenu from './DropdownMenuV2';
+import {ParentContext} from './ParentContext';
+import Button from '../button';
+
 
 type State = {
   visible: boolean
 };
-
-export const ParentContext = createContext();
-ParentContext.displayName = 'ParentContext';
 
 class Dropdown extends Component {
   state: State;
@@ -62,7 +61,7 @@ class Dropdown extends Component {
 
   initEvent(): void {
     const {trigger, splitButton} = this.props;
-    const triggerElm: any = this.triggerRef.current;//ReactDOM.findDOMNode(splitButton ? this.refs.triggerRef : this.refs.default);
+    const triggerElm: any = this.triggerRef.current.isReactComponent ? this.triggerRef.current.domRef.current : this.triggerRef.current;
 
     if (trigger === 'hover') {
       triggerElm.addEventListener('mouseenter', this.show.bind(this));
@@ -93,35 +92,36 @@ class Dropdown extends Component {
   render(): React.DOM {
     const {splitButton, type, size, menu} = this.props;
     return (
-      <div
-        ref={this.domRef}
-        style={this.style()}
-        className={this.className('el-dropdown')}
+      <ParentContext.Provider
+        value={{
+          parentDomRef: this.domRef,
+          parent: this,
+        }}
       >
-        {
-          // splitButton ? (
-          //   <Button.Group>
-          //     <Button type={type} size={size} onClick={this.props.onClick.bind(this)}>
-          //       {this.props.children}
-          //     </Button>
-          //     <Button ref={this.triggerRef} type={type} size={size} className="el-dropdown__caret-button">
-          //       <i className="el-dropdown__icon el-icon-caret-bottom"></i>
-          //     </Button>
-          //   </Button.Group>
-          // ) : React.cloneElement(this.props.children, {ref: this.triggerRef})
-          React.cloneElement(this.props.children, {ref: this.triggerRef})
-        }
-        <ParentContext.Provider
-          value={{a:'13123213123123123',c:()=>1}}
+        <div
+          ref={this.domRef}
+          style={this.style()}
+          className={this.className('el-dropdown')}
         >
           {
-            menu
-            // React.cloneElement(menu, {
-            //   ref: this.dropdownRef,
-            // })
+            splitButton ? (
+              <Button.Group>
+                <Button type={type} size={size} onClick={this.props.onClick.bind(this)}>
+                  {this.props.children}
+                </Button>
+                <Button ref={this.triggerRef} type={type} size={size} className="el-dropdown__caret-button">
+                  <i className="el-dropdown__icon el-icon-caret-bottom"></i>
+                </Button>
+              </Button.Group>
+            ) : React.cloneElement(this.props.children, {ref: this.triggerRef})
           }
-        </ParentContext.Provider>
-      </div>
+          {
+            React.cloneElement(menu, {
+              ref: this.dropdownRef,
+            })
+          }
+        </div>
+      </ParentContext.Provider>
     )
   }
 }
@@ -146,13 +146,4 @@ Dropdown.defaultProps = {
   menuAlign: 'end'
 }
 
-export default function t(props){
-  debugger;
-  return <ParentContext.Provider
-    value={{a:'13123213123123123',c:()=>1}}
-  >
-    <DropdownMenu>123123111</DropdownMenu>
-    {props.children}
-  </ParentContext.Provider>
-};
-// export default ClickOutside(Dropdown);
+export default ClickOutside(Dropdown);

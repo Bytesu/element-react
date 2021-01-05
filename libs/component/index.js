@@ -13,6 +13,16 @@ export const styleFn = (props, ...args) => {
 }
 
 export default class Component extends React.Component {
+  constructor(props) {
+    super(props);
+    this.domRef = React.createRef();
+    this.state = {}
+  }
+
+  genDomRef() {
+    return this.domRef;
+  }
+
   classNames(...args) {
     return classnames(args);
   }

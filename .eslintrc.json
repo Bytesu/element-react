@@ -1,7 +1,7 @@
 {
   "root": true,
   "parser": "babel-eslint",
-  "extends": [ "airbnb", "eslint:recommended", "plugin:flowtype/recommended" ],
+  "extends": [ "airbnb", "prettier/flowtype","eslint:recommended", "plugin:flowtype/recommended" ],
   "plugins": [ "react", "jsx-a11y", "flowtype" ],
   "env": {
     "browser": true,
@@ -11,7 +11,7 @@
   },
   "settings": {
     "flowtype": {
-      "onlyFilesWithFlowAnnotation": true
+      "onlyFilesWithFlowAnnotation": false
     }
   },
   "rules": {
@@ -43,3 +43,4 @@
     "react/no-array-index-key": 0
   }
 }
+//
