@@ -4,11 +4,11 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 
-
+const port  =3000;
 new WebpackDevServer(webpack({
     devtool: 'source-map',
     entry: [
-      'webpack-dev-server/client?http://localhost:9000',
+      `webpack-dev-server/client?http://localhost:${port}`,
       'webpack/hot/only-dev-server',
       'react-hot-loader/patch',
       '../site/index'
@@ -112,7 +112,7 @@ new WebpackDevServer(webpack({
     hot: true,
     historyApiFallback: true,
     stats: {colors: true}
-  }).listen(9000, 'localhost', error => {
+  }).listen(port, 'localhost', error => {
   if (error) {
     throw error;
   }

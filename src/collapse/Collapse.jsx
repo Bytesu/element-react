@@ -22,7 +22,7 @@ export default class Collapse extends Component {
     };
   }
 
-  componentWillReceiveProps (nextProps: Object) {
+  UNSAFE_componentWillReceiveProps (nextProps: Object) {
     this.setActiveNames(nextProps.value)
   }
 

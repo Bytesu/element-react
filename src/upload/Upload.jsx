@@ -35,7 +35,7 @@ export default class Upload extends Component {
     };
   }
 
-  componentWillMount(): void {
+  UNSAFE_componentWillMount(): void {
     this.init(this.props);
   }
 

@@ -130,11 +130,14 @@ export default class MessageBox extends Component {
         <div style={{ position: 'absolute', zIndex: 2001 }}>
           <Transition
             name="msgbox-fade"
+            domRef={this.domRef}
             onAfterLeave={() => {
               willUnmount && willUnmount()
             }}
           >
-            <View show={visible}>
+            <View show={visible}
+                  ref={this.domRef}
+            >
               <div className={this.classNames('el-message-box__wrapper', customClass)}>
                 <div className="el-message-box">
                   {
@@ -194,8 +197,12 @@ export default class MessageBox extends Component {
             </View>
           </Transition>
         </div>
-        <Transition name="v-modal">
-          <View show={visible}>
+        <Transition name="v-modal"
+                    domRef={this.domRef}
+        >
+          <View show={visible}
+                ref={this.domRef}
+          >
             <div className="v-modal" style={{ zIndex: 1006 }} />
           </View>
         </Transition>

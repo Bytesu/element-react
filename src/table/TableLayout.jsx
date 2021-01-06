@@ -44,7 +44,7 @@ export default class TableLayout extends Component<TableLayoutProps, TableLayout
     addResizeListener(this.el, this.resizeListener)
   }
 
-  componentWillReceiveProps(nextProps: TableLayoutProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: TableLayoutProps) {
     const preHeight = this.props.height || this.props.maxHeight;
     const nextHeight = nextProps.height || nextProps.maxHeight;
     if (preHeight !== nextHeight) {
@@ -80,7 +80,7 @@ export default class TableLayout extends Component<TableLayoutProps, TableLayout
     }
   }
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
     removeResizeListener(this.el, this.resizeListener)
   }
 

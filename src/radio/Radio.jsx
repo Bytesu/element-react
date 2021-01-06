@@ -21,7 +21,7 @@ export default class Radio extends Component {
     };
   }
 
-  componentWillReceiveProps(props: Object) {
+  UNSAFE_componentWillReceiveProps(props: Object) {
     const checked = this.getChecked(props);
 
     if (this.state.checked != checked) {

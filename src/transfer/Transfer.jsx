@@ -80,7 +80,7 @@ export default class Transfer extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { leftDefaultChecked, rightDefaultChecked } = this.props;
     if (leftDefaultChecked.length) {
       this.setState({ leftChecked: leftDefaultChecked })

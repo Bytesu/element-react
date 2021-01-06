@@ -66,7 +66,7 @@ export default class Rate extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps: Object): void {
+  UNSAFE_componentWillReceiveProps(nextProps: Object): void {
     if (nextProps.value && nextProps.value !== this.props.value) {
       this.setState({
         value: nextProps.value

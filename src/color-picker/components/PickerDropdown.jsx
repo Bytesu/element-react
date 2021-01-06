@@ -16,8 +16,12 @@ export default class PickerDropdown extends Component {
     const { color, showAlpha, onPick, onClear, showPicker } = this.props;
     const currentColor = color.value;
     return (
-      <Transition name="el-zoom-in-top">
-        <View show={showPicker}>
+      <Transition name="el-zoom-in-top"
+        domRef={this.domRef}
+        >
+        <View show={showPicker}
+          ref={this.domRef}
+        >
           <div className="el-color-dropdown el-color-picker__panel">
             <div className="el-color-dropdown__main-wrapper">
               <HueSlider

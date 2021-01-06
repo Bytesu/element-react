@@ -2,8 +2,7 @@
 
 import React from 'react';
 import ClickOutside from 'react-click-outside';
-import {Component, PropTypes} from '../../libs';
-import {ParentContext} from './ParentContext';
+import {Component,ParentContext, PropTypes} from '../../libs';
 import Button from '../button';
 
 

@@ -4,7 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const port =9000;
 
 new WebpackDevServer(webpack({
     devtool: 'eval',
@@ -86,7 +86,7 @@ new WebpackDevServer(webpack({
     hot: true,
     historyApiFallback: true,
     stats: {colors: true}
-  }).listen(9000, 'localhost', error => {
+  }).listen(port, 'localhost', error => {
   if (error) {
     throw error;
   }

@@ -6,7 +6,7 @@ import ClickOutside from 'react-click-outside';
 import { debounce } from 'throttle-debounce';
 import Popper from 'popper.js';
 import StyleSheet from '../../libs/utils/style';
-import { Component, PropTypes, Transition, View } from '../../libs';
+import { Component,ParentContext, PropTypes, Transition, View } from '../../libs';
 import { addResizeListener, removeResizeListener } from '../../libs/utils/resize-event';
 
 import { Scrollbar } from '../scrollbar';
@@ -56,7 +56,10 @@ class Select extends Component {
 
   constructor(props: Object) {
     super(props);
-
+    this.rootRef  = React.createRef();
+    this.referenceRef  = React.createRef();
+    this.popperRef  = React.createRef();
+    this.inputRef  = React.createRef();
     this.state = {
       options: [],
       isSelect: true,
@@ -95,21 +98,16 @@ class Select extends Component {
     this.resetInputWidth = this._resetInputWidth.bind(this)
   }
 
-  getChildContext(): Object {
-    return {
-      component: this
-    };
-  }
 
   componentDidMount() {
-    this.reference = ReactDOM.findDOMNode(this.refs.reference);
-    this.popper = ReactDOM.findDOMNode(this.refs.popper);
+    this.reference = this.referenceRef.current.domRef.current;
+    this.popper = this.popperRef.current;
 
     this.handleValueChange();
-    addResizeListener(this.refs.root, this.resetInputWidth);
+    addResizeListener(this.rootRef.current, this.resetInputWidth);
   }
 
-  componentWillReceiveProps(props: Object) {
+  UNSAFE_componentWillReceiveProps(props: Object) {
     if (props.placeholder != this.props.placeholder) {
       this.setState({
         currentPlaceholder: props.placeholder
@@ -150,11 +148,11 @@ class Select extends Component {
   }
 
   componentDidUpdate() {
-    this.state.inputWidth = this.reference.getBoundingClientRect().width;
+    this.state.inputWidth = this.referenceRef.current.domRef.current.getBoundingClientRect().width;
   }
 
-  componentWillUnmount() {
-    removeResizeListener(this.refs.root, this.resetInputWidth);
+  UNSAFE_componentWillUnmount() {
+    removeResizeListener(this.rootRef.current, this.resetInputWidth);
   }
 
   debounce(): number {
@@ -195,18 +193,18 @@ class Select extends Component {
     let { query, dropdownUl, selected, selectedLabel, bottomOverflowBeforeHidden } = this.state;
 
     if (!visible) {
-      this.reference.querySelector('input').blur();
+      this.reference.blur();
 
-      if (this.refs.root.querySelector('.el-input__icon')) {
-        const elements = this.refs.root.querySelector('.el-input__icon');
+      if (this.rootRef.current.querySelector('.el-input__icon')) {
+        const elements = this.rootRef.current.querySelector('.el-input__icon');
 
         for (let i = 0; i < elements.length; i++) {
           elements[i].classList.remove('is-reverse');
         }
       }
 
-      if (this.refs.input) {
-        this.refs.input.blur();
+      if (this.inputRef.current) {
+        this.inputRef.current.blur();
       }
 
       this.resetHoverIndex();
@@ -228,10 +226,10 @@ class Select extends Component {
         this.setState({ bottomOverflowBeforeHidden, selectedLabel });
       }
     } else {
-      let icon = this.refs.root.querySelector('.el-input__icon');
+      let icon = this.rootRef.current.querySelector('.el-input__icon');
 
       if (icon && !icon.classList.contains('el-icon-circle-close')) {
-        const elements = this.refs.root.querySelector('.el-input__icon');
+        const elements = this.rootRef.current.querySelector('.el-input__icon');
 
         for (let i = 0; i < elements.length; i++) {
           elements[i].classList.add('is-reverse');
@@ -246,17 +244,18 @@ class Select extends Component {
         query = selectedLabel;
 
         if (multiple) {
-          this.refs.input.focus();
+          this.inputRef.current.focus();
         } else {
-          this.refs.reference.focus();
+          this.referenceRef.current.focus();
         }
       }
 
       if (!dropdownUl) {
-        let dropdownChildNodes = this.popper.childNodes;
-        dropdownUl = [].filter.call(dropdownChildNodes, item => item.tagName === 'UL')[0];
+        dropdownUl =  this.popperRef.current.querySelector('ul')
+        // dropdownUl = [].filter.call(dropdownChildNodes, item => item.tagName === 'UL')[0];
       }
 
+      debugger;
       if (!multiple && dropdownUl) {
         if (bottomOverflowBeforeHidden > 0) {
           dropdownUl.scrollTop += bottomOverflowBeforeHidden;
@@ -347,12 +346,12 @@ class Select extends Component {
         hoverIndex = -1;
         inputLength = 20;
 
-        this.refs.input.focus();
+        this.inputRef.current.focus();
       }
 
       this.setState({ valueChangeBySelected, query, hoverIndex, inputLength }, () => {
-        if (this.refs.input) {
-          this.refs.input.value = '';
+        if (this.inputRef.current) {
+          this.inputRef.current.value = '';
         }
       });
     } else {
@@ -426,9 +425,9 @@ class Select extends Component {
   showCloseIcon(): boolean {
     let criteria = this.props.clearable && this.state.inputHovering && !this.props.multiple && this.state.options.indexOf(this.state.selected) > -1;
 
-    if (!this.refs.root) return false;
+    if (!this.rootRef.current) return false;
 
-    let icon = this.refs.root.querySelector('.el-input__icon');
+    let icon = this.rootRef.current.querySelector('.el-input__icon');
 
     if (icon) {
       if (criteria) {
@@ -527,7 +526,7 @@ class Select extends Component {
     let { currentPlaceholder, cachedPlaceHolder } = this.state;
 
     if (currentPlaceholder !== '') {
-      currentPlaceholder = this.refs.input.value ? '' : cachedPlaceHolder;
+      currentPlaceholder = this.inputRef.current.value ? '' : cachedPlaceHolder;
     }
 
     this.setState({ currentPlaceholder });
@@ -539,7 +538,7 @@ class Select extends Component {
     }
 
     this.setState({
-      inputLength: this.refs.input.value.length * 15 + 20
+      inputLength: this.inputRef.current.value.length * 15 + 20
     });
   }
 
@@ -550,8 +549,8 @@ class Select extends Component {
   }
 
   resetInputHeight() {
-    let inputChildNodes = this.reference.childNodes;
-    let input = [].filter.call(inputChildNodes, item => item.tagName === 'INPUT')[0];
+    // let inputChildNodes = this.reference.childNodes;
+    let input = this.reference;//[].filter.call(inputChildNodes, item => item.tagName === 'INPUT')[0];
 
     input.style.height = Math.max(this.refs.tags.clientHeight + 6, sizeMap[this.props.size] || 36) + 'px';
 
@@ -788,8 +787,8 @@ class Select extends Component {
   onMouseDown(event) {
     event.preventDefault();
 
-    if (this.refs.input) {
-      this.refs.input.focus();
+    if (this.inputRef.current) {
+      this.inputRef.current.focus();
     }
 
     this.toggleMenu();
@@ -810,9 +809,16 @@ class Select extends Component {
   render() {
     const { multiple, size, disabled, filterable, loading } = this.props;
     const { selected, inputWidth, inputLength, query, selectedLabel, visible, options, filteredOptionsCount, currentPlaceholder } = this.state;
+    // return <ParentContext.Context
+    //   value={{parent:this}}
+    // ><div>12313</div>
+    //   </ParentContext.Context>
 
     return (
-      <div ref="root" style={this.style()} className={this.className('el-select')}>
+      <ParentContext.Provider
+        value={{parent:this}}
+      >
+        <div ref={this.rootRef} style={this.style()} className={this.className('el-select')}>
         {
           multiple && (
             <div ref="tags" className="el-select__tags" onClick={this.toggleMenu.bind(this)} style={{
@@ -837,7 +843,7 @@ class Select extends Component {
               {
                 filterable && (
                   <input
-                    ref="input"
+                    ref={this.inputRef}
                     type="text"
                     className={this.classNames('el-select__input', size && `is-${size}`)}
                     style={{ width: inputLength, maxWidth: inputWidth - 42 }}
@@ -889,7 +895,7 @@ class Select extends Component {
           )
         }
         <Input
-          ref="reference"
+          ref={this.referenceRef}
           value={selectedLabel}
           type="text"
           placeholder={currentPlaceholder}
@@ -928,10 +934,12 @@ class Select extends Component {
             }
           }}
         />
-        <Transition name="el-zoom-in-top" onEnter={this.onEnter.bind(this)} onAfterLeave={this.onAfterLeave.bind(this)}>
-          <View show={visible && this.emptyText() !== false}>
+        <Transition name="el-zoom-in-top" onEnter={this.onEnter.bind(this)} onAfterLeave={this.onAfterLeave.bind(this)}
+        >
+          <View show={visible && this.emptyText() !== false}
+          >
             <div
-              ref="popper"
+              ref={this.popperRef}
               className={this.classNames('el-select-dropdown', { 'is-multiple': multiple })}
               style={{ minWidth: inputWidth }}
             >
@@ -949,13 +957,12 @@ class Select extends Component {
           </View>
         </Transition>
       </div>
+      </ParentContext.Provider>
     )
   }
 }
 
-Select.childContextTypes = {
-  component: PropTypes.any
-};
+
 
 Select.contextTypes = {
   form: PropTypes.any

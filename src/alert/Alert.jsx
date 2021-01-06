@@ -38,8 +38,12 @@ export default class Alert extends Component {
 
   render() {
     return (
-      <Transition name="el-alert-fade" onAfterLeave={this.onAfterLeave.bind(this)}>
-        <View show={this.state.visible}>
+      <Transition name="el-alert-fade" onAfterLeave={this.onAfterLeave.bind(this)}
+      domRef={this.domRef}
+      >
+        <View show={this.state.visible}
+          ref={this.domRef}
+        >
           <div style={this.style()} className={this.className('el-alert', `el-alert--${ this.props.type }`)}>
             {
               this.props.showIcon && <i className={this.classNames('el-alert__icon', TYPE_CLASSES_MAP[this.props.type] || 'el-icon-information', {

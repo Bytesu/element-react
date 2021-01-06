@@ -31,12 +31,12 @@ function inChina() {
   }
 }
 
-render(<AppContainer><App /></AppContainer>, document.getElementById('app'), inChina);
+render(<StrictMode><AppContainer><App /></AppContainer></StrictMode>, document.getElementById('app'), inChina);
 
 if (module.hot) {
   module.hot.accept('./page', () => {
     const App = require('./page').default;
 
-    render(<AppContainer><App /></AppContainer>, document.getElementById('app'));
+    render(<StrictMode><AppContainer><App /></AppContainer></StrictMode>, document.getElementById('app'));
   });
 }

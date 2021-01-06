@@ -2,17 +2,17 @@
 
 import React from 'react';
 import ClickOutside from 'react-click-outside';
-import { Component, PropTypes } from '../../libs';
+import {Component, PropTypes} from '../../libs';
 import PickerDropdown from './components/PickerDropdown';
 import Color from './color';
-import type { ColorType, ColorPickerState } from './Types';
+import type {ColorPickerState, ColorType} from './Types';
 
 class ColorPicker extends Component {
-  state: ColorPickerState;
-
   static defaultProps = {
-    onChange() {}
+    onChange() {
+    }
   };
+  state: ColorPickerState;
 
   constructor(props: Object) {
     super(props);
@@ -21,7 +21,7 @@ class ColorPicker extends Component {
       enableAlpha: this.props.showAlpha,
       format: this.props.colorFormat
     });
-
+    this.dropdownRef = React.createRef();
     this.state = {
       value: this.props.value,
       color: color,
@@ -31,12 +31,12 @@ class ColorPicker extends Component {
   }
 
   componentDidMount() {
-    const { value, color } = this.state;
+    const {value, color} = this.state;
     if (value) {
       color.fromString(value);
-      this.setState({ color });
+      this.setState({color});
     }
-    this.popperElm = this.refs.dropdown;
+    this.popperElm = this.dropdownRef.current.domRef.current;
   }
 
   getChildContext() {
@@ -46,13 +46,13 @@ class ColorPicker extends Component {
   }
 
   handleChange(color: ColorType): void {
-    this.setState({ value: color.value, color });
+    this.setState({value: color.value, color});
   }
 
   confirmValue(): void {
-    const { value } = this.state;
-    const { onChange } = this.props;
-    this.setState({ showPicker: false }, () => onChange(value));
+    const {value} = this.state;
+    const {onChange} = this.props;
+    this.setState({showPicker: false}, () => onChange(value));
   }
 
   clearValue(): void {
@@ -79,26 +79,26 @@ class ColorPicker extends Component {
   }
 
   resetColor(): void {
-    const { value, color } = this.state;
+    const {value, color} = this.state;
     if (value) {
       color.fromString(value);
-      this.setState({ color });
+      this.setState({color});
     }
   }
 
   handleClickOutside(): void {
-    this.setState({ showPicker: false });
+    this.setState({showPicker: false});
   }
 
   render(): React.DOM {
-    const { showAlpha } = this.props;
-    const { value, color, showPicker, showPanelColor } = this.state;
+    const {showAlpha} = this.props;
+    const {value, color, showPicker, showPanelColor} = this.state;
 
     let displayedColor;
     if (!value && !showPanelColor) {
       displayedColor = 'transparent';
     } else {
-      const { r, g, b } = color.toRgb();
+      const {r, g, b} = color.toRgb();
       const alpha = color.get('alpha');
       if (typeof alpha === 'number') {
         displayedColor = showAlpha
@@ -110,7 +110,7 @@ class ColorPicker extends Component {
       <div className="el-color-picker">
         <div
           className="el-color-picker__trigger"
-          onClick={() => this.setState({ showPicker: !showPicker })}
+          onClick={() => this.setState({showPicker: !showPicker})}
         >
           <span
             className={this.classNames({
@@ -120,16 +120,16 @@ class ColorPicker extends Component {
           >
             <span
               className="el-color-picker__color-inner"
-              style={{ backgroundColor: displayedColor }}
+              style={{backgroundColor: displayedColor}}
             />
             {!value &&
-              !showPanelColor &&
-              <span className="el-color-picker__empty el-icon-close" />}
+            !showPanelColor &&
+            <span className="el-color-picker__empty el-icon-close"/>}
           </span>
-          <span className="el-color-picker__icon el-icon-caret-bottom" />
+          <span className="el-color-picker__icon el-icon-caret-bottom"/>
         </div>
         <PickerDropdown
-          ref="dropdown"
+          ref={this.dropdownRef}
           showPicker={showPicker}
           color={color}
           onPick={() => this.confirmValue()}

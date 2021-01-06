@@ -9,5 +9,5 @@ export default class Input extends Markdown {
 }
 
 Input.defaultProps = {
-  customItem: require('./custom-item')
+  customItem: require('./custom-item').default
 }

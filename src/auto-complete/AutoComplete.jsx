@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ClickOutside from 'react-click-outside';
-import { Component, PropTypes } from '../../libs';
+import { Component,ParentContext, PropTypes } from '../../libs';
 import Input from '../input';
 import Suggestions from './Suggestions';
 
@@ -56,25 +56,22 @@ class AutoComplete extends Component {
       loading: false,
       highlightedIndex: -1
     };
+    this.suggestionsNode  = React.createRef();
+    this.inputNode  = React.createRef();
   }
 
-  getChildContext() {
-    return {
-      component: this
-    };
-  }
 
-  componentWillReceiveProps(props: Props): void {
+  UNSAFE_componentWillReceiveProps(props: Props): void {
     this.setState({ inputValue: props.value });
   }
 
   componentDidUpdate(): void {
     const visible = this.suggestionVisible();
-    const reference = ReactDOM.findDOMNode(this.inputNode);
+    const reference =this.inputNode.current.domRef.current; ;//ReactDOM.findDOMNode(this.inputNode);
 
     if (reference instanceof HTMLElement) {
       setTimeout(() => {
-        this.suggestionsNode.onVisibleChange(visible, reference.offsetWidth);
+        this.suggestionsNode.current.onVisibleChange(visible, reference.offsetWidth);
       })
     }
   }
@@ -141,7 +138,7 @@ class AutoComplete extends Component {
     if (index >= this.state.suggestions.length) {
       index = this.state.suggestions.length - 1;
     }
-    const reference = ReactDOM.findDOMNode(this.suggestionsNode);
+    const reference = this.suggestionsNode.current.domRef.current;//ReactDOM.findDOMNode(this.suggestionsNode);
     if (reference instanceof HTMLElement) {
       const suggestion = document.querySelector('.el-autocomplete-suggestion__wrap');
       const suggestionList = document.querySelectorAll('.el-autocomplete-suggestion__list li');
@@ -195,9 +192,12 @@ class AutoComplete extends Component {
     const { inputValue, suggestions } = this.state;
 
     return (
+      <ParentContext.Provider
+        value={{parent:this}}
+      >
       <div style={this.style()} className={this.className('el-autocomplete')}>
         <Input
-          ref={node => this.inputNode = node}
+          ref={this.inputNode}
           value={inputValue}
           disabled={disabled}
           placeholder={placeholder}
@@ -213,17 +213,14 @@ class AutoComplete extends Component {
           onKeyDown={this.onKeyDown.bind(this)}
         />
         <Suggestions
-          ref={node => this.suggestionsNode = node}
+          ref={this.suggestionsNode}
           className={this.classNames(popperClass)}
           suggestions={suggestions}
         />
       </div>
+      </ParentContext.Provider>
     )
   }
 }
-
-AutoComplete.childContextTypes = {
-  component: PropTypes.any
-};
 
 export default ClickOutside(AutoComplete);

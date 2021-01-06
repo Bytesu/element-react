@@ -172,8 +172,12 @@ export default class CascaderMenu extends Component {
     });
 
     return (
-      <Transition name="el-zoom-in-top">
-        <View show={visible}>
+      <Transition name="el-zoom-in-top"
+                  domRef={this.domRef}
+      >
+        <View show={visible}
+              ref={this.domRef}
+        >
           <div className={this.classNames('el-cascader-menus', popperClass)}>
             {menus}
           </div>

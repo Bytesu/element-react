@@ -1,8 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import {Component, PropTypes} from '../../libs';
-import {ParentContext} from './ParentContext';
+import {ParentContext,Component, PropTypes} from '../../libs';
 
 export default class DropdownItem extends Component {
   handleClick(): void {

@@ -4,7 +4,7 @@ import React from 'react';
 import { Component, PropTypes } from '../../libs';
 
 export default class Loading extends Component {
-  componentWillUnmount(): void {
+  UNSAFE_componentWillUnmount(): void {
     this.enableScroll();
   }
 

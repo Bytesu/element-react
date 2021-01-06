@@ -18,7 +18,7 @@ export default class CheckboxGroup extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps: Object): void {
+  UNSAFE_componentWillReceiveProps(nextProps: Object): void {
     if (nextProps.value !== this.props.value) {
       this.setState({
         options: nextProps.value

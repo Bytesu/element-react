@@ -53,9 +53,10 @@ export default class Markdown extends React.Component {
       }), { renderer: this.renderer });
 
       return (
-        <div dangerouslySetInnerHTML={{
+        <React.StrictMode>
+          <div dangerouslySetInnerHTML={{
           __html: html
-        }} />
+        }} /></React.StrictMode>
       )
     } else {
       return <span />

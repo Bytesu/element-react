@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes, View } from '../../libs';
+import { Component,ParentContext, PropTypes, View } from '../../libs';
 
 type State = {
   index: number,
@@ -22,30 +22,27 @@ export default class Option extends Component {
     }
   }
 
-  componentWillMount() {
-    this.parent().onOptionCreate(this);
+  UNSAFE_componentWillMount() {
+    this.context.parent.onOptionCreate(this);
 
     this.setState({
-      index: this.parent().state.options.indexOf(this)
+      index: this.context.parent.state.options.indexOf(this)
     });
 
     if (this.currentSelected() === true) {
-      this.parent().addOptionToValue(this, true);
+      this.context.parent.addOptionToValue(this, true);
     }
   }
 
-  componentWillUnmount() {
-    this.parent().onOptionDestroy(this);
+  UNSAFE_componentWillUnmount() {
+    this.context.parent.onOptionDestroy(this);
   }
 
-  parent(): Object {
-    return this.context.component;
-  }
 
   currentSelected(): boolean {
-    return this.props.selected || (this.parent().props.multiple ?
-      this.parent().state.value.indexOf(this.props.value) > -1 :
-      this.parent().state.value === this.props.value);
+    return this.props.selected || (this.context.parent.props.multiple ?
+      this.context.parent.state.value.indexOf(this.props.value) > -1 :
+      this.context.parent.state.value === this.props.value);
   }
 
   currentLabel(): string {
@@ -53,26 +50,26 @@ export default class Option extends Component {
   }
 
   itemSelected(): boolean {
-    if (Object.prototype.toString.call(this.parent().state.selected) === '[object Object]') {
-      return this === this.parent().state.selected;
-    } else if (Array.isArray(this.parent().state.selected)) {
-      return this.parent().state.selected.map(el => el.props.value).indexOf(this.props.value) > -1;
+    if (Object.prototype.toString.call(this.context.parent.state.selected) === '[object Object]') {
+      return this === this.context.parent.state.selected;
+    } else if (Array.isArray(this.context.parent.state.selected)) {
+      return this.context.parent.state.selected.map(el => el.props.value).indexOf(this.props.value) > -1;
     }
 
     return false;
   }
 
   hoverItem() {
-    if (!this.props.disabled && !this.parent().props.disabled) {
-      this.parent().setState({
-        hoverIndex: this.parent().state.options.indexOf(this)
+    if (!this.props.disabled && !this.context.parent.props.disabled) {
+      this.context.parent.setState({
+        hoverIndex: this.context.parent.state.options.indexOf(this)
       });
     }
   }
 
   selectOptionClick() {
-    if (this.props.disabled !== true && this.parent().props.disabled !== true) {
-      this.parent().onOptionClick(this);
+    if (this.props.disabled !== true && this.context.parent.props.disabled !== true) {
+      this.context.parent.onOptionClick(this);
     }
   }
 
@@ -82,8 +79,8 @@ export default class Option extends Component {
     const visible = new RegExp(parsedQuery, 'i').test(this.currentLabel());
 
     if (!visible) {
-      this.parent().setState({
-        filteredOptionsCount: this.parent().state.filteredOptionsCount - 1
+      this.context.parent.setState({
+        filteredOptionsCount: this.context.parent.state.filteredOptionsCount - 1
       });
     }
 
@@ -92,7 +89,7 @@ export default class Option extends Component {
 
   resetIndex() {
     this.setState({
-      index: this.parent().state.options.indexOf(this)
+      index: this.context.parent.state.options.indexOf(this)
     });
   }
 
@@ -105,8 +102,8 @@ export default class Option extends Component {
           style={this.style()}
           className={this.className('el-select-dropdown__item', {
             'selected': this.itemSelected(),
-            'is-disabled': this.props.disabled || this.parent().props.disabled,
-            'hover': this.parent().state.hoverIndex === index
+            'is-disabled': this.props.disabled || this.context.parent.props.disabled,
+            'hover': this.context.parent.state.hoverIndex === index
           })}
           onMouseEnter={this.hoverItem.bind(this)}
           onClick={this.selectOptionClick.bind(this)}
@@ -118,9 +115,7 @@ export default class Option extends Component {
   }
 }
 
-Option.contextTypes = {
-  component: PropTypes.any
-};
+Option.contextType = ParentContext;
 
 Option.propTypes = {
   value: PropTypes.any.isRequired,

@@ -29,7 +29,7 @@ export default class Tooltip extends Component {
     }
   }
 
-  componentWillReceiveProps(props: Object) {
+  UNSAFE_componentWillReceiveProps(props: Object) {
     if (props.visible !== this.props.visible) {
       this.setState({
         showPopper: props.visible
@@ -83,8 +83,13 @@ export default class Tooltip extends Component {
         </div>
         {
           !disabled && (
-            <Transition name={transition} onEnter={this.onEnter.bind(this)} onAfterLeave={this.onAfterLeave.bind(this)}>
-              <View show={this.state.showPopper} >
+            <Transition
+              domRef={this.domRef}
+              name={transition}
+              onEnter={this.onEnter.bind(this)} onAfterLeave={this.onAfterLeave.bind(this)}>
+              <View show={this.state.showPopper}
+                    ref={this.domRef}
+              >
                 <div ref="popper" className={ this.classNames("el-tooltip__popper", `is-${effect}`) }>
                   <div>{ content }</div>
                   { visibleArrow && <div ref="arrow" className="popper__arrow"/> }

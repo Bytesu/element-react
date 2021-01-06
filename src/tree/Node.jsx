@@ -81,7 +81,7 @@ export default class Node extends Component {
     }
   }
 
-  componentWillUnmount(): void {
+  UNSAFE_componentWillUnmount(): void {
     this.loadHandler();
     // clear watchs
     for (let w in this.watchers) {

@@ -32,7 +32,7 @@ export default class Switch extends Component {
     this.updateSwitch();
   }
 
-  componentWillReceiveProps(props: Object) {
+  UNSAFE_componentWillReceiveProps(props: Object) {
     this.setState({ value: props.value }, () => {
       this.updateSwitch();
     });
@@ -133,8 +133,12 @@ export default class Switch extends Component {
           <span className="el-switch__button" style={Object.assign({}, buttonStyle)} onClick={this.setFocus.bind(this)}/>
         </span>
 
-        <Transition name="label-fade">
-          <View show={value === onValue}>
+        <Transition name="label-fade"
+                    domRef={this.domRef}
+        >
+          <View show={value === onValue}
+                ref={this.domRef}
+          >
             <div
               className="el-switch__label el-switch__label--left"
               style={{ 'width': coreWidth + 'px' }}
@@ -145,8 +149,12 @@ export default class Switch extends Component {
           </View>
         </Transition>
 
-        <Transition name="label-fade">
-          <View show={value !== onValue}>
+        <Transition name="label-fade"
+                    domRef={this.domRef}
+        >
+          <View show={value !== onValue}
+                ref={this.domRef}
+          >
             <div
               className="el-switch__label el-switch__label--right"
               style={{ 'width': coreWidth + 'px' }}

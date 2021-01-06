@@ -74,7 +74,7 @@ export default class Carousel extends Component {
     }
   }
 
-  componentWillUnmount(): void {
+  UNSAFE_componentWillUnmount(): void {
     removeResizeListener(this.refs.root, this.resetItemPosition);
     this.pauseTimer();
   }
@@ -229,10 +229,14 @@ export default class Carousel extends Component {
         <div
           className="el-carousel__container"
           style={{height: height}}>
-          <Transition name="carousel-arrow-left">
+          <Transition name="carousel-arrow-left"
+            domRef={this.domRef}
+          >
             {
               arrow !== 'never' && (
-                <View show={arrow === 'always' || hover}>
+                <View show={arrow === 'always' || hover}
+                      ref={this.domRef}
+                >
                   <button
                     className="el-carousel__arrow el-carousel__arrow--left"
                     onMouseEnter={this.handleButtonEnter.bind(this, 'left')}

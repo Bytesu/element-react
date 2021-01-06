@@ -28,7 +28,7 @@ export default class Notification extends Component {
     this.startTimer();
   }
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
     this.stopTimer();
   }
 
@@ -63,6 +63,7 @@ export default class Notification extends Component {
     const { onClose = () => false, willUnmount, duration, top, type, iconClass, title, message } = this.props
     return (
       <Transition
+        domRef={this.domRef}
         unmountOnExit
         transitionClass={{
           exiting: 'el-notification-fade-leave-active',
@@ -75,7 +76,8 @@ export default class Notification extends Component {
         onExit={() => willUnmount(this.offsetHeight, parseInt(this.rootDOM.style.top))}
         onExited={() => onClose()}
       >
-        <View show={visible}>
+        <View show={visible} ref={this.domRef}
+        >
           <div
             ref={(ele) => { this.rootDOM = ele; }}
             className="el-notification"

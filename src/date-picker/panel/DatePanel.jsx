@@ -58,6 +58,7 @@ export default class DatePanel extends PopperBase {
       case SELECTION_MODES.YEAR:
         currentView = PICKER_VIEWS.YEAR; break;
     }
+    this.inputRef = React.createRef();
 
     this.state = {
       currentView,
@@ -71,7 +72,7 @@ export default class DatePanel extends PopperBase {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let date = new Date()
     if (nextProps.value){
       date = toDate(nextProps.value)
@@ -400,7 +401,7 @@ export default class DatePanel extends PopperBase {
                   </span>
                   <span className="el-date-picker__editor-wrap">
                     <Input
-                      ref="input"
+                      ref={this.inputRef}
                       onFocus={()=> this.setState({timePickerVisible: !this.state.timePickerVisible})}
                       placeholder={t('el.datepicker.selectTime')}
                       value={this.visibleTime}
@@ -423,7 +424,7 @@ export default class DatePanel extends PopperBase {
                             }
                             onPicked={this.handleTimePick.bind(this)}
                             format={this.timeFormat}
-                            getPopperRefElement={() => ReactDOM.findDOMNode(this.refs.input)}
+                            getPopperRefElement={() => this.refs.inputRef.current.domRef.current}
                             popperMixinOption={
                               {
                                 placement: PLACEMENT_MAP[this.props.align] || PLACEMENT_MAP.left

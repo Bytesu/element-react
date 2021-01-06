@@ -8,7 +8,6 @@
   "typings": "typings/index.d.ts",
   "scripts": {
     "start": "cd site && node ./webpack.config.js",
-    "start-dir": "node ./webpack.config.js",
     "typescript-test": "tsc --lib es2015 --moduleResolution node --project typings/typing-tests",
     "test": "flow check && BABEL_ENV=development jest",
     "jest": "jest",

@@ -30,7 +30,7 @@ export default class SvPanel extends Component {
     this.update();
   }
 
-  componentWillReceiveProps(nextProps: Object): void {
+  UNSAFE_componentWillReceiveProps(nextProps: Object): void {
     const { background } = this.state;
     const newBackground = 'hsl(' + nextProps.color.get('hue') + ', 100%, 50%)';
     if (newBackground !== background) {

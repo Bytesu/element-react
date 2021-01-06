@@ -15,6 +15,7 @@ export default class UploadList extends Component {
     if(listType === 'none') return null;
     return (
       <ul
+        ref={this.domRef}
         className={this.classNames({
           'el-upload-list': true,
           [`el-upload-list--${listType}`]: true
@@ -93,7 +94,7 @@ export default class UploadList extends Component {
 
   render(): React.DOM {
     return (
-      <Transition name="list">{ this.uploadList() }</Transition>
+      <Transition name="list"  domRef={this.domRef}>{ this.uploadList() }</Transition>
     )
   }
 }

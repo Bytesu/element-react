@@ -71,7 +71,7 @@ export default class Popover extends Component {
     }
   }
 
-  componentWillReceiveProps(props: Object) {
+  UNSAFE_componentWillReceiveProps(props: Object) {
     if (props.visible !== this.props.visible) {
       this.setState({
         showPopper: props.visible
@@ -79,7 +79,7 @@ export default class Popover extends Component {
     }
   }
 
-  componentWillUnmount(): void {
+  UNSAFE_componentWillUnmount(): void {
     this.reference.parentNode.replaceChild(this.reference.cloneNode(true), this.reference);
   }
 
@@ -123,8 +123,12 @@ export default class Popover extends Component {
 
     return (
       <span>
-        <Transition name={transition} onEnter={this.onEnter.bind(this)} onAfterLeave={this.onAfterLeave.bind(this)}>
-          <View show={this.state.showPopper}>
+        <Transition name={transition} onEnter={this.onEnter.bind(this)} onAfterLeave={this.onAfterLeave.bind(this)}
+                    domRef={this.domRef}
+        >
+          <View show={this.state.showPopper}
+                ref={this.domRef}
+          >
             <div ref="popper" className={this.className('el-popover', popperClass)} style={this.style({ width: Number(width) })}>
               { title && <div className="el-popover__title">{title}</div> }
               { content }

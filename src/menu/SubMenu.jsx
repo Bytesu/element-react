@@ -94,8 +94,12 @@ export default class SubMenu extends MixinComponent {
         </div>
         {
           this.rootMenu().props.mode === 'horizontal' ? (
-            <Transition name="el-zoom-in-top">
-              <View show={this.opened()}>
+            <Transition name="el-zoom-in-top"
+                        domRef={this.domRef}
+            >
+              <View show={this.opened()}
+                    ref={this.domRef}
+              >
                 <ul className="el-menu">{this.props.children}</ul>
               </View>
             </Transition>

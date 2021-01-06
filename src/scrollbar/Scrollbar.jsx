@@ -44,9 +44,9 @@ export class Scrollbar extends PureComponent {
       }
     }
   }
-  
 
-  componentWillUnmount(){
+
+  UNSAFE_componentWillUnmount(){
     this.cleanRAF();
     this.cleanResize && this.cleanResize();
   }
@@ -104,7 +104,7 @@ export class Scrollbar extends PureComponent {
     let nodes;
     if (!native){
       const wrap = (
-        <div 
+        <div
           {...others}
           ref="wrap"
           key={0}
@@ -123,11 +123,11 @@ export class Scrollbar extends PureComponent {
     }else {
       nodes = [
         (
-          <div 
+          <div
             {...others}
-            key={0} 
-            ref="wrap" 
-            className={this.classNames(wrapClass, 'el-scrollbar__wrap')} 
+            key={0}
+            ref="wrap"
+            className={this.classNames(wrapClass, 'el-scrollbar__wrap')}
             style={style}>
             {view}
           </div>

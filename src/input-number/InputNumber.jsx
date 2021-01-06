@@ -21,9 +21,10 @@ export default class InputNumber extends Component {
       value: props.defaultValue,
       inputActive: false
     };
+    // this.inputRef= React.createRef();
   }
 
-  componentWillReceiveProps(props: Object) {
+  UNSAFE_componentWillReceiveProps(props: Object) {
     if (props.value != this.props.value) {
       this.setState({ value: props.value });
     }
@@ -171,7 +172,7 @@ export default class InputNumber extends Component {
           )
         }
         <Input
-          ref="input"
+          // ref={this.inputRef}
           className={this.classNames({
             'is-active': inputActive
           })}

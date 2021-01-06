@@ -88,7 +88,7 @@ export default class BasePicker extends Component {
     this.state = Object.assign({}, state, {
       pickerVisible: false,
     }, this.propsToState(props))
-
+    this.inputRootRef =React.createRef();
     this.clickOutsideId = 'clickOutsideId_' + idGen.next()
   }
 
@@ -103,7 +103,7 @@ export default class BasePicker extends Component {
   }
   // ---: end, abstract methods
 
-  componentWillReceiveProps(nextProps: any) {
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
     this.setState(this.propsToState(nextProps))
   }
 
@@ -305,7 +305,7 @@ export default class BasePicker extends Component {
                 {
                   ...others,
                   ... {
-                    getPopperRefElement: () => ReactDOM.findDOMNode(this.refs.inputRoot),
+                    getPopperRefElement: () =>this.inputRootRef.current.domRef.current,
                     popperMixinOption: {
                       placement: PLACEMENT_MAP[this.props.align] || PLACEMENT_MAP.left
                     }
@@ -358,7 +358,7 @@ export default class BasePicker extends Component {
 
             this.setState(nstate)
           }}
-          ref="inputRoot"
+          ref={this.inputRootRef}
           value={text}
           icon={createIconSlot()}
         />

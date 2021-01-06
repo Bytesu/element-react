@@ -2,8 +2,7 @@
 
 import React, {useContext, useImperativeHandle, useRef, useState} from 'react';
 import Popper from 'popper.js';
-import {Transition, View} from '../../libs';
-import {ParentContext} from './ParentContext'
+import {Transition,ParentContext, View} from '../../libs';
 import {classNameFn, styleFn} from '../../libs/component/'
 
 type State = {
@@ -27,7 +26,6 @@ const DropdownMenu = React.forwardRef((props, ref) => {
       }
     })
   }
-  // const ref1 =  createRef();
   useImperativeHandle(ref, () => ({
     onVisibleChange: (visible) => {
       setVisible(visible);

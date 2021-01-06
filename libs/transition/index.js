@@ -11,7 +11,6 @@ export default class Transition extends Component {
     super(props);
     const {children, domRef} = props;
     this.el = domRef;
-    // domRef
     this.state = {
       children: children && this.enhanceChildren(children)
     }
@@ -34,7 +33,7 @@ export default class Transition extends Component {
   }
 
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const children = React.isValidElement(this.props.children) && React.Children.only(this.props.children);
     const nextChildren = React.isValidElement(nextProps.children) && React.Children.only(nextProps.children);
 
@@ -82,7 +81,6 @@ export default class Transition extends Component {
 
   enhanceChildren(children, props) {
     return React.cloneElement(children, Object.assign({}, props))
-    // return children;
   }
 
   isViewComponent(element) {
@@ -158,64 +156,70 @@ export default class Transition extends Component {
   toggleVisible() {
     const {onEnter} = this.props;
     const {enter, enterActive, enterTo, leaveActive, leaveTo} = this.transitionClass;
+
     if (this.el) {
       const childDOM = this.el.current;//ReactDOM.findDOMNode(this.el); //this.el.current
+      if (childDOM != null) {
+        childDOM.addEventListener('transitionend', this.didEnter);
+        childDOM.addEventListener('animationend', this.didEnter);
 
-      childDOM.addEventListener('transitionend', this.didEnter);
-      childDOM.addEventListener('animationend', this.didEnter);
-
-      // this.animateElement(childDOM, enter, enterActive, this.didEnter);
-
-      requestAnimationFrame(() => {
-        // when hidden transition not end
-        if (childDOM.classList.contains(leaveActive)) {
-          childDOM.classList.remove(leaveActive, leaveTo);
-
-          childDOM.removeEventListener('transitionend', this.didLeave);
-          childDOM.removeEventListener('animationend', this.didLeave);
-        }
-
-        childDOM.style.display = '';
-        childDOM.classList.add(enter, enterActive);
-
-        onEnter && onEnter();
+        // this.animateElement(childDOM, enter, enterActive, this.didEnter);
 
         requestAnimationFrame(() => {
-          childDOM.classList.remove(enter);
-          childDOM.classList.add(enterTo);
+          // when hidden transition not end
+          if (childDOM.classList.contains(leaveActive)) {
+            childDOM.classList.remove(leaveActive, leaveTo);
+
+            childDOM.removeEventListener('transitionend', this.didLeave);
+            childDOM.removeEventListener('animationend', this.didLeave);
+          }
+
+          childDOM.style.display = '';
+          childDOM.classList.add(enter, enterActive);
+
+          onEnter && onEnter();
+
+          requestAnimationFrame(() => {
+            childDOM.classList.remove(enter);
+            childDOM.classList.add(enterTo);
+          })
         })
-      })
+      }
+    } else {
+      debugger;
     }
   }
 
   toggleHidden() {
     const {onLeave} = this.props;
     const {leave, leaveActive, leaveTo, enterActive, enterTo} = this.transitionClass;
+    if(!this.el)return;
     const childDOM = this.el.current;//ReactDOM.findDOMNode(this.el);
+    if (childDOM) {
+      childDOM.addEventListener('transitionend', this.didLeave);
+      childDOM.addEventListener('animationend', this.didLeave);
 
-    childDOM.addEventListener('transitionend', this.didLeave);
-    childDOM.addEventListener('animationend', this.didLeave);
-
-    // this.animateElement(childDOM, leave, leaveActive, this.didLeave);
-
-    requestAnimationFrame(() => {
-      // when enter transition not end
-      if (childDOM.classList.contains(enterActive)) {
-        childDOM.classList.remove(enterActive, enterTo);
-
-        childDOM.removeEventListener('transitionend', this.didEnter);
-        childDOM.removeEventListener('animationend', this.didEnter);
-      }
-
-      childDOM.classList.add(leave, leaveActive);
-
-      onLeave && onLeave();
+      // this.animateElement(childDOM, leave, leaveActive, this.didLeave);
 
       requestAnimationFrame(() => {
-        childDOM.classList.remove(leave);
-        childDOM.classList.add(leaveTo);
+        // when enter transition not end
+        if (childDOM.classList.contains(enterActive)) {
+          childDOM.classList.remove(enterActive, enterTo);
+
+          childDOM.removeEventListener('transitionend', this.didEnter);
+          childDOM.removeEventListener('animationend', this.didEnter);
+        }
+
+        childDOM.classList.add(leave, leaveActive);
+
+        onLeave && onLeave();
+
+        requestAnimationFrame(() => {
+          childDOM.classList.remove(leave);
+          childDOM.classList.add(leaveTo);
+        })
       })
-    })
+    }
   }
 
   render() {

@@ -62,7 +62,7 @@ export default class Tabs extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps: Props): void {
+  UNSAFE_componentWillReceiveProps(nextProps: Props): void {
     if (nextProps.activeName !== this.props.activeName) {
       this.setState({
         currentName: nextProps.activeName,

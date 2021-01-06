@@ -39,7 +39,7 @@ export default class FormItem extends Component {
     }
   }
 
-  componentWillUnmount(): void {
+  UNSAFE_componentWillUnmount(): void {
     this.parent().removeField(this);
   }
 
@@ -75,10 +75,10 @@ export default class FormItem extends Component {
 
       return;
     }
-    
+
     setTimeout(() => {
       this.validate('change');
-      
+
     });
   }
 
@@ -211,7 +211,7 @@ export default class FormItem extends Component {
           label && (
             <label className="el-form-item__label" style={this.labelStyle()}>
               {
-                typeof(label) === 'string'? 
+                typeof(label) === 'string'?
                 label + this.parent().props.labelSuffix :
                 label
               }
@@ -220,8 +220,12 @@ export default class FormItem extends Component {
         }
         <div className="el-form-item__content" style={this.contentStyle()}>
           {this.props.children}
-          <Transition name="el-zoom-in-top">
-            { error && <div className="el-form-item__error">{error}</div> }
+          <Transition name="el-zoom-in-top"
+                      domRef={this.domRef}
+          >
+            { error && <div className="el-form-item__error"
+                            ref={this.domRef}
+            >{error}</div> }
           </Transition>
         </div>
       </div>

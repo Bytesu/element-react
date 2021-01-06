@@ -8,6 +8,12 @@
 
 ## Getting Started
 
+## upgrade 
+1. `removed findDOMNode()`
+2. `removed refs`
+3. `add UNSAFE_`
+4. `removed contextTypes/getChildContext/childContextTypes and add contextType`
+
 ### Install
 
 ```bash

@@ -22,6 +22,8 @@ export default class Input extends Component {
 
   constructor(props: Object) {
     super(props);
+    this.inputRef = React.createRef();
+    this.textareaRef = React.createRef();
 
     this.state = {
       textareaStyle: { resize: props.resize }
@@ -36,13 +38,13 @@ export default class Input extends Component {
 
   focus(): void {
     setTimeout(() => {
-      (this.refs.input || this.refs.textarea).focus();
+      (this.inputRef.current || this.textareaRef.current).focus();
     });
   }
 
   blur(): void {
     setTimeout(() => {
-      (this.refs.input || this.refs.textarea).blur();
+      (this.inputRef.current || this.textareaRef.current).blur();
     });
   }
 
@@ -76,10 +78,10 @@ export default class Input extends Component {
   }
 
   handleTrim(): void {
-    this.refs.input.value = this.refs.input.value.trim()
+    this.inputRef.current.value = this.inputRef.current.value.trim()
     if(this.props.onChange) {
       // this's for controlled components
-      this.props.onChange(this.refs.input.value.trim())
+      this.props.onChange(this.inputRef.current.value.trim())
     }
   }
 
@@ -98,7 +100,7 @@ export default class Input extends Component {
 
     const minRows = autosize.minRows;
     const maxRows = autosize.maxRows;
-    const textareaCalcStyle = calcTextareaHeight(this.refs.textarea, minRows, maxRows);
+    const textareaCalcStyle = calcTextareaHeight(this.textareaRef.current, minRows, maxRows);
 
     this.setState({
       textareaStyle: Object.assign({}, this.state.textareaStyle, textareaCalcStyle)
@@ -132,10 +134,11 @@ export default class Input extends Component {
     delete otherProps.onIconClick;
 
     if (type === 'textarea') {
+      this.domRef =this.textareaRef;
       return (
         <div style={this.style()} className={this.className(classname)}>
           <textarea { ...otherProps }
-            ref="textarea"
+            ref={this.textareaRef}
             className="el-textarea__inner"
             style={this.state.textareaStyle}
             rows={rows}
@@ -146,12 +149,13 @@ export default class Input extends Component {
         </div>
       )
     } else {
+      this.domRef =this.inputRef;
       return (
         <div style={this.style()} className={this.className(classname)} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
           { prepend && <div className="el-input-group__prepend">{prepend}</div> }
           { typeof icon === 'string' ? <i className={`el-input__icon el-icon-${icon}`} onClick={this.handleIconClick.bind(this)}>{prepend}</i> : icon }
           <input { ...otherProps }
-            ref="input"
+            ref={this.inputRef}
             type={type}
             className="el-input__inner"
             autoComplete={autoComplete}

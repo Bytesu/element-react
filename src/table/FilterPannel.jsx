@@ -33,7 +33,7 @@ export default class FilterPannel extends Component<FilterProps, FilterState> {
     document.addEventListener('click', this.handleClickOutside);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.filteredValue !== nextProps.filteredValue) {
       this.setState({ filteredValue: nextProps.filteredValue })
     }
@@ -43,7 +43,7 @@ export default class FilterPannel extends Component<FilterProps, FilterState> {
     this.renderPortal(this.renderContent(), this.container);
   }
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
     this.poperIns && this.poperIns.destroy();
     ReactDOM.unmountComponentAtNode(this.container);
     document.removeEventListener('click', this.handleClickOutside);
@@ -133,9 +133,12 @@ export default class FilterPannel extends Component<FilterProps, FilterState> {
       <Transition
         name="el-zoom-in-top"
         onEnter={this.onEnter}
+        domRef={this.domRef}
         onAfterLeave={this.onAfterLeave}
       >
-        <View show={visible}>
+        <View show={visible}
+              ref={this.domRef}
+        >
           <div
             className={'el-table-filter'}
             ref={(dom) => { this.poper = dom; }}

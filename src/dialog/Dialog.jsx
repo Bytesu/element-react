@@ -31,7 +31,7 @@ export default class Dialog extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps: Object): void {
+  UNSAFE_componentWillReceiveProps(nextProps: Object): void {
     const { bodyOverflow } = this.state;
     const { lockScroll, modal } = this.props;
     if (this.willOpen(this.props, nextProps)) {
@@ -60,7 +60,7 @@ export default class Dialog extends Component {
     }
   }
 
-  componentWillUnmount(): void {
+  UNSAFE_componentWillUnmount(): void {
     const { lockScroll } = this.props;
     if (lockScroll && document.body && document.body.style) {
       document.body.style.removeProperty('overflow');
@@ -100,8 +100,10 @@ export default class Dialog extends Component {
 
     return (
       <div>
-        <Transition name="dialog-fade">
-          <View show={visible}>
+        <Transition name="dialog-fade" domRef={this.domRef}>
+          <View show={visible}
+                domRef={this.domRef}
+          >
             <div
               ref={this.wrap}
               style={{ zIndex: 1013 }}
