@@ -10,8 +10,8 @@
     "start": "cd site && node ./webpack.config.js",
     "typescript-test": "tsc --lib es2015 --moduleResolution node --project typings/typing-tests",
     "test": "flow check && BABEL_ENV=development jest",
-    "jest": "jest",
-    "lint": "eslint src libs site --quiet",
+    "jest": "jest ",
+    "lint": "eslint src libs site --quiet --fix",
     "build": "cd build/site && webpack --progress",
     "prepubl¡sh": "./build/scripts/prepare.sh",
     "postpublish": "./build/scripts/release.sh"
@@ -34,6 +34,7 @@
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
+    "@babel/eslint-parser": "^7.12.1",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-decorators": "^7.12.10",
     "@babel/plugin-proposal-do-expressions": "^7.12.1",
@@ -54,6 +55,7 @@
     "@babel/preset-flow": "^7.12.1",
     "@babel/preset-react": "^7.12.10",
     "@babel/runtime-corejs2": "^7.12.5",
+    "@babel/standalone": "^7.12.12",
     "@types/react": "^17.0.0",
     "babel-jest": "^23.4.2",
     "babel-loader": "^8.2.2",
@@ -89,8 +91,6 @@
     "style-loader": "^0.23.1",
     "typescript": "^3.3.1",
     "url-loader": "^1.1.2",
-    "@babel/eslint-parser": "^7.12.1",
-    "@babel/standalone": "^7.12.12",
     "webpack": "^5.11.1",
     "webpack-cli": "^4.3.1",
     "webpack-dev-server": "^3.11.1"

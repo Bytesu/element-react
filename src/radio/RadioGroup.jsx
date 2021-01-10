@@ -1,14 +1,14 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes } from '../../libs';
+import { Component,ParentContext, PropTypes } from '../../libs';
 
 export default class RadioGroup extends Component {
-  getChildContext(): { component: RadioGroup } {
-    return {
-      component: this
-    };
-  }
+  // getChildContext(): { component: RadioGroup } {
+  //   return {
+  //     component: this
+  //   };
+  // }
 
   onChange(value: mixed) {
     if (this.props.onChange) {
@@ -17,7 +17,9 @@ export default class RadioGroup extends Component {
   }
 
   render() {
-    return (
+    return (<ParentContext.Provider
+        value={{ component: this}}
+      >
       <div ref="RadioGroup" style={this.style()} className={this.className('el-radio-group')}>
         {
           React.Children.map(this.props.children, element => {
@@ -38,13 +40,14 @@ export default class RadioGroup extends Component {
           })
         }
       </div>
+      </ParentContext.Provider>
     )
   }
 }
 
-RadioGroup.childContextTypes = {
-  component: PropTypes.any
-};
+// RadioGroup.childContextTypes = {
+//   component: PropTypes.any
+// };
 
 RadioGroup.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

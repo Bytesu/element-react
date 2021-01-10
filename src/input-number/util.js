@@ -1,7 +1,8 @@
 /* @flow */
 
 export function accSub(arg1: number, arg2: number): number {
-  var r1, r2, m, n;
+  let r1; let r2; let m; let
+    n;
   try {
     r1 = arg1.toString().split('.')[1].length;
   } catch (e) {
@@ -18,7 +19,8 @@ export function accSub(arg1: number, arg2: number): number {
 }
 
 export function accAdd(arg1: number, arg2: number): number {
-  var r1, r2, m, c;
+  let r1; let r2; let m; let
+    c;
   try {
     r1 = arg1.toString().split('.')[1].length;
   } catch (e) {
@@ -32,7 +34,7 @@ export function accAdd(arg1: number, arg2: number): number {
   c = Math.abs(r1 - r2);
   m = Math.pow(10, Math.max(r1, r2));
   if (c > 0) {
-    var cm = Math.pow(10, c);
+    const cm = Math.pow(10, c);
     if (r1 > r2) {
       arg1 = Number(arg1.toString().replace('.', ''));
       arg2 = Number(arg2.toString().replace('.', '')) * cm;

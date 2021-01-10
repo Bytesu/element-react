@@ -1,4 +1,6 @@
-import { formatDate, parseDate, getWeekNumber, getDateOfISOWeek, deconstructDate } from './utils';
+import {
+  formatDate, parseDate, getWeekNumber, getDateOfISOWeek, deconstructDate
+} from './utils';
 
 export const RANGE_SEPARATOR = ' - ';
 export const DEFAULT_FORMATS = {
@@ -57,7 +59,7 @@ export const TYPE_VALUE_RESOLVER_MAP = {
   default: {
     formatter(value) {
       if (!value) return '';
-      return '' + value;
+      return `${value}`;
     },
     parser(text) {
       if (text === undefined || text === '') return null;
@@ -69,50 +71,47 @@ export const TYPE_VALUE_RESOLVER_MAP = {
       if (value instanceof Date) {
         if (!format) {
           const weekNumber = getWeekNumber(value);
-          return value.getFullYear() + 'w' + (weekNumber > 9 ? weekNumber : '0' + weekNumber);
-        } else {
-          let str = DATE_FORMATTER(value, format)
-          if (str != '') {
-            let weekno = deconstructDate(value).week
-            str = /WW/.test(str) ? str.replace(/WW/, weekno < 10 ? `0${weekno}` : weekno) : str.replace(/W/, weekno)
-          }
-          return str
+          return `${value.getFullYear()}w${weekNumber > 9 ? weekNumber : `0${weekNumber}`}`;
         }
+        let str = DATE_FORMATTER(value, format)
+        if (str != '') {
+          const weekno = deconstructDate(value).week
+          str = /WW/.test(str) ? str.replace(/WW/, weekno < 10 ? `0${weekno}` : weekno) : str.replace(/W/, weekno)
+        }
+        return str
       }
 
       return ''
     },
     parser(text, format) {
       const weekno = (matcher, src) => {
-        let str = src.substr(matcher.index, matcher.length);
+        const str = src.substr(matcher.index, matcher.length);
         if (/\d\d?/.test(str)) {
           return { week: Number(str), isValid: true }
-        } else {
-          return { week: -1, isValid: false }
         }
+        return { week: -1, isValid: false }
       }
 
-      let date = DATE_PARSER(text, format)
-      let matcher = format.match(/(WW?)/)
+      const date = DATE_PARSER(text, format)
+      const matcher = format.match(/(WW?)/)
       let wn = null
 
       if (!matcher) return date
-      else {
-        if (text.length > format.length) return ''
 
-        switch (matcher.length) {
-          case 1:
-            wn = weekno(matcher, text)
-            if (!wn.isValid) return ''
-            break;
-          case 2:
-            wn = weekno(matcher, text)
-            if (!wn.isValid) return ''
-            break;
-          default: throw new Error('never reach here')
-        }
-        return getDateOfISOWeek(wn.week, date.getFullYear())
+      if (text.length > format.length) return ''
+
+      switch (matcher.length) {
+        case 1:
+          wn = weekno(matcher, text)
+          if (!wn.isValid) return ''
+          break;
+        case 2:
+          wn = weekno(matcher, text)
+          if (!wn.isValid) return ''
+          break;
+        default: throw new Error('never reach here')
       }
+      return getDateOfISOWeek(wn.week, date.getFullYear())
     }
   },
   date: {
@@ -154,23 +153,22 @@ export const TYPE_VALUE_RESOLVER_MAP = {
   number: {
     formatter(value) {
       if (!value) return '';
-      return '' + value;
+      return `${value}`;
     },
     parser(text) {
-      let result = Number(text);
+      const result = Number(text);
 
       if (!isNaN(text)) {
         return result;
-      } else {
-        return null;
       }
+      return null;
     }
   }
 };
 
 export const PLACEMENT_MAP = {
   left: 'bottom-start',
-  // in git version 8de9d2ce, this been changed to 
+  // in git version 8de9d2ce, this been changed to
   // center: 'bottom',
   // due to it's close relation to popper, I dont have enought confidence to update it right now
   center: 'bottom-center',

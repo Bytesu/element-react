@@ -2,7 +2,7 @@ import PopperJS from 'popper.js';
 import { require_condition } from './assert'
 
 const mixinPrototype = {
-  //---------- start: public methods
+  // ---------- start: public methods
   /**
    * @param {HTMLElement} popupElement - The reference element used to position the popper.
    * @param {HTMLElement} refElement - The HTML element used as popper, or a configuration used to generate the popper.
@@ -11,7 +11,9 @@ const mixinPrototype = {
   createPopper(popupElement, refElement, popperOptions) {
     require_condition(popupElement && refElement)
 
-    const { visibleArrow, placement, zIndex, offset, width, ...others } = this._popper_config
+    const {
+      visibleArrow, placement, zIndex, offset, width, ...others
+    } = this._popper_config
     popperOptions = { ...popperOptions, ...others }
 
     if (!/^(top|bottom|left|right)(-start|-end)?$/g.test(placement)) {
@@ -39,7 +41,7 @@ const mixinPrototype = {
       this._resetTransformOrigin();
       this._popper_state.isCreated = true
       this._poperJS.popper.style.zIndex = zIndex
-      this._poperJS.popper.style.width = width !== null ? `${width}px` : reference.getBoundingClientRect().width + 'px'
+      this._poperJS.popper.style.width = width !== null ? `${width}px` : `${reference.getBoundingClientRect().width}px`
     }
 
     this._poperJS = new PopperJS(reference, popper, popperOptions);
@@ -59,12 +61,14 @@ const mixinPrototype = {
     this._poperJS.update();
   },
 
-  //---------- end: public methods
+  // ---------- end: public methods
 
   _resetTransformOrigin() {
-    let placementMap = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
-    let placement = this._poperJS.popper.getAttribute('x-placement').split('-')[0];
-    let origin = placementMap[placement];
+    const placementMap = {
+      top: 'bottom', bottom: 'top', left: 'right', right: 'left'
+    };
+    const placement = this._poperJS.popper.getAttribute('x-placement').split('-')[0];
+    const origin = placementMap[placement];
     this._poperJS.popper.style.transformOrigin = ['top', 'bottom'].indexOf(placement) > -1
       ? `center ${origin}`
       : `${origin} center`;
@@ -99,7 +103,8 @@ export function PopperMixin(config) {
       placement: 'bottom',
       boundariesPadding: 5,
       visibleArrow: false,
-    }, config)
+    }, config
+  )
   this._popper_state = {}
 }
 PopperMixin.prototype = mixinPrototype
@@ -107,9 +112,8 @@ PopperMixin.prototype = mixinPrototype
 
 const PopperReactMixinMethods = {
   hookReactLifeCycle(getPopperRootDom, getRefDom) {
-
-    const componentDidMount = this.componentDidMount
-    const componentWillUnmount = this.componentWillUnmount
+    const { componentDidMount } = this
+    const { componentWillUnmount } = this
 
     this.componentDidMount = function (...args) {
       const root = getPopperRootDom()
@@ -133,7 +137,6 @@ const PopperReactMixinMethods = {
         componentWillUnmount.apply(this, args)
       }
     }
-
   }
 }
 
@@ -148,7 +151,7 @@ export function PopperReactMixin(getPopperRootDom, getRefDom, config) {
   require_condition(typeof getRefDom === 'function', '`getRefDom` func is required!')
 
   PopperMixin.call(this, config)
-  Object.keys(mixinPrototype).forEach(k=>this[k]=mixinPrototype[k])
+  Object.keys(mixinPrototype).forEach(k => this[k] = mixinPrototype[k])
   PopperReactMixinMethods.hookReactLifeCycle.call(this, getPopperRootDom, getRefDom)
 
   return this

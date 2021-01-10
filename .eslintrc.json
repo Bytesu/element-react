@@ -1,7 +1,7 @@
 {
   "root": true,
-  "parser": "babel-eslint",
-  "extends": [ "airbnb", "prettier/flowtype","eslint:recommended", "plugin:flowtype/recommended" ],
+  "parser": "@babel/eslint-parser",
+  "extends": [ "airbnb", "eslint:recommended", "plugin:flowtype/recommended" ],
   "plugins": [ "react", "jsx-a11y", "flowtype" ],
   "env": {
     "browser": true,
@@ -15,6 +15,9 @@
     }
   },
   "rules": {
+    "semi": [0, "always"],
+    "no-underscore-dangle": 0,
+    "comma-dangle": [0, "never"],
     "jsx-a11y/no-static-element-interactions": 0,
     "react/self-closing-comp": 0,
     "react/jsx-no-bind": 0,

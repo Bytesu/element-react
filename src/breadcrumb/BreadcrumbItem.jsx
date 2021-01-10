@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes } from '../../libs';
+import { Component, ParentContext,PropTypes } from '../../libs';
 
 export default class BreadcrumbItem extends Component {
   render() {
@@ -14,6 +14,4 @@ export default class BreadcrumbItem extends Component {
   }
 }
 
-BreadcrumbItem.contextTypes = {
-  separator: PropTypes.string
-};
+BreadcrumbItem.contextType =ParentContext

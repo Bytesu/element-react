@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Component, PropTypes, View } from '../../libs';
+import { Component,ParentContext, PropTypes, View } from '../../libs';
 
 type State = {
   hover: boolean,
@@ -114,7 +114,7 @@ export default class CarouselItem extends Component {
   }
 
   parent(): Object {
-    return this.context.component;
+    return this.context.parent;
   }
 
   render() {
@@ -150,6 +150,4 @@ export default class CarouselItem extends Component {
   }
 }
 
-CarouselItem.contextTypes = {
-  component: PropTypes.any
-};
+CarouselItem.contextType = ParentContext;

@@ -1,20 +1,20 @@
 import { DateUtils } from '../../../libs/utils';
 import Locale from '../../locale'
 
-const t = Locale.t
+const { t } = Locale
 const weeks = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
 DateUtils.i18n = {
-  dayNamesShort: weeks.map(week => t(`el.datepicker.weeks.${ week }`)),
-  dayNames: weeks.map(week => t(`el.datepicker.weeks.${ week }`)),
-  monthNamesShort: months.map(month => t(`el.datepicker.months.${ month }`)),
-  monthNames: months.map((month, index) => t(`el.datepicker.month${ index + 1 }`))
+  dayNamesShort: weeks.map(week => t(`el.datepicker.weeks.${week}`)),
+  dayNames: weeks.map(week => t(`el.datepicker.weeks.${week}`)),
+  monthNamesShort: months.map(month => t(`el.datepicker.months.${month}`)),
+  monthNames: months.map((month, index) => t(`el.datepicker.month${index + 1}`))
 };
 
 
 const newArray = function (start, end) {
-  let result = [];
+  const result = [];
   for (let i = start; i <= end; i++) {
     result.push(i);
   }
@@ -25,11 +25,11 @@ export const equalDate = function (dateA, dateB) {
   return dateA === dateB || new Date(dateA).getTime() === new Date(dateB).getTime();
 };
 
-export const toDate = function(date) {
+export const toDate = function (date) {
   return isDate(date) ? new Date(date) : null;
 };
 
-export const isDate = function(date) {
+export const isDate = function (date) {
   if (date === null || date === undefined) return false;
   if (isNaN(new Date(date).getTime())) return false;
   return true;
@@ -53,9 +53,8 @@ export const getDayCountOfMonth = function (year, month) {
   if (month === 1) {
     if (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0) {
       return 29;
-    } else {
-      return 28;
     }
+    return 28;
   }
 
   return 31;
@@ -69,7 +68,7 @@ export const getFirstDayOfMonth = function (date) {
 
 export const DAY_DURATION = 86400000;
 
-// return date corresponding to the first cell on datetable 
+// return date corresponding to the first cell on datetable
 export const getStartDateOfMonth = function (year, month, offsetWeek = 0) {
   const result = new Date(year, month, 1);
   const day = result.getDay();
@@ -85,11 +84,11 @@ export const getStartDateOfMonth = function (year, month, offsetWeek = 0) {
 };
 
 /**
- * 
+ *
  * @export
  * @param {any} day , first day of current month, 0 - 6
- * @param {number} [offsetWeek=0, 0-6, 0 sunday, 6 saturday] 
- * @returns 
+ * @param {number} [offsetWeek=0, 0-6, 0 sunday, 6 saturday]
+ * @returns
  */
 export function getOffsetToWeekOrigin(day, offsetWeek = 0) {
   let offset = day >= offsetWeek ? day - offsetWeek : 7 + day - offsetWeek;
@@ -110,13 +109,11 @@ export const getWeekNumber = function (src) {
 
 // http://stackoverflow.com/questions/16590500/javascript-calculate-date-from-week-number
 export function getDateOfISOWeek(w, y) {
-  var simple = new Date(y, 0, 1 + (w - 1) * 7);
-  var dow = simple.getDay();
-  var ISOweekStart = simple;
-  if (dow <= 4)
-    ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-  else
-    ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  const simple = new Date(y, 0, 1 + (w - 1) * 7);
+  const dow = simple.getDay();
+  const ISOweekStart = simple;
+  if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
   return ISOweekStart;
 }
 
@@ -140,7 +137,7 @@ export const prevMonth = function (src) {
 };
 
 export const nextMonth = function (src) {
-  let clone = new Date(src.getTime())
+  const clone = new Date(src.getTime())
   const year = clone.getFullYear();
   const month = clone.getMonth();
   const date = clone.getDate();
@@ -162,7 +159,7 @@ export const getRangeHours = function (ranges) {
   const hours = [];
   let disabledHours = [];
 
-  (ranges || []).forEach(range => {
+  (ranges || []).forEach((range) => {
     const value = range.map(date => date.getHours());
 
     disabledHours = disabledHours.concat(newArray(value[0], value[1]));
@@ -181,7 +178,7 @@ export const getRangeHours = function (ranges) {
   return hours;
 };
 
-export const limitRange = function(date, ranges, format = 'yyyy-MM-dd HH:mm:ss') {
+export const limitRange = function (date, ranges, format = 'yyyy-MM-dd HH:mm:ss') {
   if (!ranges || !ranges.length) return date;
 
   const len = ranges.length;
@@ -197,7 +194,7 @@ export const limitRange = function(date, ranges, format = 'yyyy-MM-dd HH:mm:ss')
   let maxDate = ranges[0][0];
   let minDate = ranges[0][0];
 
-  ranges.forEach(range => {
+  ranges.forEach((range) => {
     minDate = new Date(Math.min(range[0], minDate));
     maxDate = new Date(Math.max(range[1], maxDate));
   });

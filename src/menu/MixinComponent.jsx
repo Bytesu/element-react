@@ -1,6 +1,6 @@
 /* @flow */
 
-import { Component, PropTypes } from '../../libs';
+import { Component,ParentContext, PropTypes } from '../../libs';
 
 export default class MixinComponent extends Component {
   parent(): Component {
@@ -33,6 +33,4 @@ export default class MixinComponent extends Component {
   }
 }
 
-MixinComponent.contextTypes = {
-  component: PropTypes.any
-};
+MixinComponent.contextType =ParentContext;

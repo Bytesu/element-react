@@ -49,8 +49,8 @@ export default class TimePicker extends BasePicker {
   }
 
   onSelectionChange(start: number, end: number) {
-    this.refs.inputRoot.refs.input.setSelectionRange(start, end);
-    this.refs.inputRoot.refs.input.focus();
+    this.inputRootRef.current.domRef.current.setSelectionRange(start, end);
+    this.inputRootRef.current.domRef.current.focus();
   }
 
   pickerPanel(state: any, props: TimePickerProps) {

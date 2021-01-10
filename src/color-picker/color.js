@@ -1,5 +1,6 @@
-const hsv2hsl = function(hue, sat, val) {
-  let sl, l;
+const hsv2hsl = function (hue, sat, val) {
+  let sl; let
+    l;
 
   l = (2 - sat) * val;
   sl = sat * val;
@@ -11,16 +12,16 @@ const hsv2hsl = function(hue, sat, val) {
 
 // Need to handle 1.0 as 100%, since once it is a number, there is no difference between it and 1
 // <http://stackoverflow.com/questions/7422072/javascript-how-to-detect-number-as-a-decimal-including-1-0>
-const isOnePointZero = function(n) {
+const isOnePointZero = function (n) {
   return typeof n === 'string' && n.indexOf('.') !== -1 && parseFloat(n) === 1;
 };
 
-const isPercentage = function(n) {
+const isPercentage = function (n) {
   return typeof n === 'string' && n.indexOf('%') !== -1;
 };
 
 // Take input from [0, n] and return it as [0, 1]
-const bound01 = function(value, max) {
+const bound01 = function (value, max) {
   if (isOnePointZero(value)) value = '100%';
 
   const processPercent = isPercentage(value);
@@ -40,35 +41,39 @@ const bound01 = function(value, max) {
   return value % max / parseFloat(max);
 };
 
-const INT_HEX_MAP = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' };
+const INT_HEX_MAP = {
+  10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'
+};
 
-const toHex = function({ r, g, b }) {
-  const hexOne = function(value) {
+const toHex = function ({ r, g, b }) {
+  const hexOne = function (value) {
     value = Math.min(Math.round(value), 255);
     const high = Math.floor(value / 16);
     const low = value % 16;
-    return '' + (INT_HEX_MAP[high] || high) + (INT_HEX_MAP[low] || low);
+    return `${INT_HEX_MAP[high] || high}${INT_HEX_MAP[low] || low}`;
   };
 
   if (isNaN(r) || isNaN(g) || isNaN(b)) return '';
 
-  return '#' + hexOne(r) + hexOne(g) + hexOne(b);
+  return `#${hexOne(r)}${hexOne(g)}${hexOne(b)}`;
 };
 
-const HEX_INT_MAP = { A: 10, B: 11, C: 12, D: 13, E: 14, F: 15 };
+const HEX_INT_MAP = {
+  A: 10, B: 11, C: 12, D: 13, E: 14, F: 15
+};
 
-const parseHexChannel = function(hex) {
+const parseHexChannel = function (hex) {
   if (hex.length === 2) {
-    return (HEX_INT_MAP[hex[0].toUpperCase()] || +hex[0]) * 16 +
-      (HEX_INT_MAP[hex[1].toUpperCase()] || +hex[1]);
+    return (HEX_INT_MAP[hex[0].toUpperCase()] || +hex[0]) * 16
+      + (HEX_INT_MAP[hex[1].toUpperCase()] || +hex[1]);
   }
 
   return HEX_INT_MAP[hex[1].toUpperCase()] || +hex[1];
 };
 
-const hsl2hsv = function(hue, sat, light) {
-  sat = sat / 100;
-  light = light / 100;
+const hsl2hsv = function (hue, sat, light) {
+  sat /= 100;
+  light /= 100;
   let smin = sat;
   const lmin = Math.max(light, 0.01);
   let sv;
@@ -91,15 +96,16 @@ const hsl2hsv = function(hue, sat, light) {
 // Converts an RGB color value to HSV
 // *Assumes:* r, g, and b are contained in the set [0, 255] or [0, 1]
 // *Returns:* { h, s, v } in [0,1]
-const rgb2hsv = function(r, g, b) {
+const rgb2hsv = function (r, g, b) {
   r = bound01(r, 255);
   g = bound01(g, 255);
   b = bound01(b, 255);
 
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
-  let h, s;
-  let v = max;
+  let h; let
+    s;
+  const v = max;
 
   const d = max - min;
   s = max === 0 ? 0 : d / max;
@@ -132,7 +138,7 @@ const rgb2hsv = function(r, g, b) {
 // Converts an HSV color value to RGB.
 // *Assumes:* h is contained in [0, 1] or [0, 360] and s and v are contained in [0, 1] or [0, 100]
 // *Returns:* { r, g, b } in the set [0, 255]
-const hsv2rgb = function(h, s, v) {
+const hsv2rgb = function (h, s, v) {
   h = bound01(h, 360) * 6;
   s = bound01(s, 100);
   v = bound01(v, 100);
@@ -167,7 +173,7 @@ export default class Color {
 
     options = options || {};
 
-    for (let option in options) {
+    for (const option in options) {
       if (options.hasOwnProperty(option)) {
         this[option] = options[option];
       }
@@ -178,7 +184,7 @@ export default class Color {
 
   set(prop, value) {
     if (arguments.length === 1 && typeof prop === 'object') {
-      for (let p in prop) {
+      for (const p in prop) {
         if (prop.hasOwnProperty(p)) {
           this.set(p, prop[p]);
         }
@@ -187,12 +193,12 @@ export default class Color {
       return;
     }
 
-    this['_' + prop] = value;
+    this[`_${prop}`] = value;
     this.doOnChange();
   }
 
   get(prop) {
-    return this['_' + prop];
+    return this[`_${prop}`];
   }
 
   toRgb() {
@@ -222,7 +228,7 @@ export default class Color {
         .replace(/hsla|hsl|\(|\)/gm, '')
         .split(/\s|,/g)
         .filter(val => val !== '')
-        .map((val, index) => index > 2 ? parseFloat(val) : parseInt(val, 10));
+        .map((val, index) => (index > 2 ? parseFloat(val) : parseInt(val, 10)));
 
       if (parts.length === 4) {
         this._alpha = Math.floor(parseFloat(parts[3]) * 100);
@@ -236,7 +242,7 @@ export default class Color {
         .replace(/hsva|hsv|\(|\)/gm, '')
         .split(/\s|,/g)
         .filter(val => val !== '')
-        .map((val, index) => index > 2 ? parseFloat(val) : parseInt(val, 10));
+        .map((val, index) => (index > 2 ? parseFloat(val) : parseInt(val, 10)));
 
       if (parts.length === 4) {
         this._alpha = Math.floor(parseFloat(parts[3]) * 100);
@@ -249,7 +255,7 @@ export default class Color {
         .replace(/rgba|rgb|\(|\)/gm, '')
         .split(/\s|,/g)
         .filter(val => val !== '')
-        .map((val, index) => index > 2 ? parseFloat(val) : parseInt(val, 10));
+        .map((val, index) => (index > 2 ? parseFloat(val) : parseInt(val, 10)));
 
       if (parts.length === 4) {
         this._alpha = Math.floor(parseFloat(parts[3]) * 100);
@@ -260,7 +266,8 @@ export default class Color {
       }
     } else if (value.indexOf('#') !== -1) {
       const hex = value.replace('#', '').trim();
-      let r, g, b;
+      let r; let g; let
+        b;
 
       if (hex.length === 3) {
         r = parseHexChannel(hex[0] + hex[0]);
@@ -278,7 +285,9 @@ export default class Color {
   }
 
   doOnChange() {
-    const { _hue, _saturation, _value, _alpha, format } = this;
+    const {
+      _hue, _saturation, _value, _alpha, format
+    } = this;
 
     if (this.enableAlpha) {
       switch (format) {

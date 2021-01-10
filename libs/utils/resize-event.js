@@ -26,28 +26,28 @@
 const isServer = typeof window === 'undefined';
 
 /* istanbul ignore next */
-const requestFrame = (function() {
+const requestFrame = (function () {
   if (isServer) return;
-  const raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
-    function(fn) {
+  const raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame
+    || function (fn) {
       return window.setTimeout(fn, 20);
     };
-  return function(fn) {
+  return function (fn) {
     return raf(fn);
   };
-})();
+}());
 
 /* istanbul ignore next */
-const cancelFrame = (function() {
+const cancelFrame = (function () {
   if (isServer) return;
   const cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame || window.clearTimeout;
-  return function(id) {
+  return function (id) {
     return cancel(id);
   };
-})();
+}());
 
 /* istanbul ignore next */
-const resetTrigger = function(element) {
+const resetTrigger = function (element) {
   const trigger = element.__resizeTrigger__;
   const expand = trigger.firstElementChild;
   const contract = trigger.lastElementChild;
@@ -55,19 +55,19 @@ const resetTrigger = function(element) {
 
   contract.scrollLeft = contract.scrollWidth;
   contract.scrollTop = contract.scrollHeight;
-  expandChild.style.width = expand.offsetWidth + 1 + 'px';
-  expandChild.style.height = expand.offsetHeight + 1 + 'px';
+  expandChild.style.width = `${expand.offsetWidth + 1}px`;
+  expandChild.style.height = `${expand.offsetHeight + 1}px`;
   expand.scrollLeft = expand.scrollWidth;
   expand.scrollTop = expand.scrollHeight;
 };
 
 /* istanbul ignore next */
-const checkTriggers = function(element) {
+const checkTriggers = function (element) {
   return element.offsetWidth !== element.__resizeLast__.width || element.offsetHeight !== element.__resizeLast__.height;
 };
 
 /* istanbul ignore next */
-const scrollListener = function(event) {
+const scrollListener = function (event) {
   resetTrigger(this);
   if (this.__resizeRAF__) cancelFrame(this.__resizeRAF__);
   this.__resizeRAF__ = requestFrame(() => {
@@ -99,10 +99,10 @@ if (!attachEvent && !isServer) {
 
   if (animation === false) {
     let prefix = '';
-    for (var i = 0; i < DOM_PREFIXES.length; i++) {
-      if (testElement.style[DOM_PREFIXES[i] + 'AnimationName'] !== undefined) {
+    for (let i = 0; i < DOM_PREFIXES.length; i++) {
+      if (testElement.style[`${DOM_PREFIXES[i]}AnimationName`] !== undefined) {
         prefix = DOM_PREFIXES[i];
-        keyFramePrefix = '-' + prefix.toLowerCase() + '-';
+        keyFramePrefix = `-${prefix.toLowerCase()}-`;
         animationStartEvent = START_EVENTS[i];
         animation = true;
         break;
@@ -113,7 +113,7 @@ if (!attachEvent && !isServer) {
 
 let stylesCreated = false;
 /* istanbul ignore next */
-const createStyles = function() {
+const createStyles = function () {
   if (!stylesCreated && !isServer) {
     const animationKeyframes = `@${keyFramePrefix}keyframes ${RESIZE_ANIMATION_NAME} { from { opacity: 0; } to { opacity: 0; } } `;
     const animationStyle = `${keyFramePrefix}animation: 1ms ${RESIZE_ANIMATION_NAME};`;
@@ -141,7 +141,7 @@ const createStyles = function() {
 };
 
 /* istanbul ignore next */
-export const addResizeListener = function(element, fn) {
+export const addResizeListener = function (element, fn) {
   if (isServer) return;
   if (attachEvent) {
     element.attachEvent('onresize', fn);
@@ -164,7 +164,7 @@ export const addResizeListener = function(element, fn) {
 
       /* Listen for a css animation to detect element display/re-attach */
       if (animationStartEvent) {
-        resizeTrigger.addEventListener(animationStartEvent, function(event) {
+        resizeTrigger.addEventListener(animationStartEvent, (event) => {
           if (event.animationName === RESIZE_ANIMATION_NAME) {
             resetTrigger(element);
           }
@@ -176,16 +176,14 @@ export const addResizeListener = function(element, fn) {
 };
 
 /* istanbul ignore next */
-export const removeResizeListener = function(element, fn) {
+export const removeResizeListener = function (element, fn) {
   if (attachEvent) {
     element.detachEvent('onresize', fn);
-  } else {
-    if (element.__resizeListeners__) {
-      element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
-      if (!element.__resizeListeners__.length) {
-        element.removeEventListener('scroll', scrollListener);
-        element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__);
-      }
+  } else if (element.__resizeListeners__) {
+    element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
+    if (!element.__resizeListeners__.length) {
+      element.removeEventListener('scroll', scrollListener);
+      element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__);
     }
   }
 };

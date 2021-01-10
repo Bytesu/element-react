@@ -14,9 +14,9 @@ const DropdownMenu = React.forwardRef((props, ref) => {
   const _ref = useRef(null);
   const self = this;
   var popperJS = null;
-  const parent = useContext(ParentContext);
+  const parentCtxt = useContext(ParentContext);
   const onEnter = (): void => {
-    const parent = parent.parentDomRef.current;//ReactDOM.findDOMNode(context);
+    const parent = parentCtxt.parentDomRef.current;//ReactDOM.findDOMNode(context);
     popperJS = new Popper(parent, _ref.current, {
       placement: `bottom-${parent.menuAlign}`,
       modifiers: {

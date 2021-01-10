@@ -5,12 +5,10 @@ export default class TreeStore {
   constructor(options) {
     this.currentNode = null;
     this.currentNodeKey = null;
+    Object.keys(options).forEach((option) => {
+      this[option] = options[option];
+    })
 
-    for (let option in options) {
-      if (options.hasOwnProperty(option)) {
-        this[option] = options[option];
-      }
-    }
 
     this.nodesMap = {};
 
@@ -31,8 +29,8 @@ export default class TreeStore {
   }
 
   filter(value) {
-    const filterNodeMethod = this.filterNodeMethod;
-    const traverse = function(node) {
+    const { filterNodeMethod } = this;
+    const traverse = function (node) {
       const childNodes = node.root ? node.root.childNodes : node.childNodes;
 
       childNodes.forEach((child) => {
@@ -100,7 +98,7 @@ export default class TreeStore {
 
   _initDefaultCheckedNodes() {
     const defaultCheckedKeys = this.defaultCheckedKeys || [];
-    const nodesMap = this.nodesMap;
+    const { nodesMap } = this;
 
     defaultCheckedKeys.forEach((checkedKey) => {
       const node = nodesMap[checkedKey];
@@ -127,7 +125,7 @@ export default class TreeStore {
   }
 
   registerNode(node) {
-    const key = this.key;
+    const { key } = this;
     if (!key || !node || !node.data) return;
 
     const nodeKey = node.key;
@@ -135,7 +133,7 @@ export default class TreeStore {
   }
 
   deregisterNode(node) {
-    const key = this.key;
+    const { key } = this;
     if (!key || !node || !node.data) return;
 
     delete this.nodesMap[node.key];
@@ -143,7 +141,7 @@ export default class TreeStore {
 
   getCheckedNodes(leafOnly = false) {
     const checkedNodes = [];
-    const traverse = function(node) {
+    const traverse = function (node) {
       const childNodes = node.root ? node.root.childNodes : node.childNodes;
 
       childNodes.forEach((child) => {
@@ -161,7 +159,7 @@ export default class TreeStore {
   }
 
   getCheckedKeys(leafOnly = false) {
-    const key = this.key;
+    const { key } = this;
     const allNodes = this._getAllNodes();
     const keys = [];
     allNodes.forEach((node) => {
@@ -176,8 +174,8 @@ export default class TreeStore {
 
   _getAllNodes() {
     const allNodes = [];
-    const nodesMap = this.nodesMap;
-    for (let nodeKey in nodesMap) {
+    const { nodesMap } = this;
+    for (const nodeKey in nodesMap) {
       if (nodesMap.hasOwnProperty(nodeKey)) {
         allNodes.push(nodesMap[nodeKey]);
       }
@@ -192,11 +190,11 @@ export default class TreeStore {
 
     const keys = Object.keys(checkedKeys);
     allNodes.forEach((node) => {
-      let checked = keys.indexOf(node.data[key] + '') > -1;
+      let checked = keys.indexOf(`${node.data[key]}`) > -1;
 
       if (!node.isLeaf) {
         if (!this.checkStrictly) {
-          const childNodes = node.childNodes;
+          const { childNodes } = node;
 
           let all = true;
           let none = true;
@@ -225,8 +223,8 @@ export default class TreeStore {
 
         if (leafOnly) {
           node.setChecked(false, false);
-          const traverse = function(node) {
-            const childNodes = node.childNodes;
+          const traverse = function (node) {
+            const { childNodes } = node;
 
             childNodes.forEach((child) => {
               if (!child.isLeaf) {
@@ -245,7 +243,7 @@ export default class TreeStore {
   }
 
   setCheckedNodes(array, leafOnly = false) {
-    const key = this.key;
+    const { key } = this;
     const checkedKeys = {};
     array.forEach((item) => {
       checkedKeys[(item || {})[key]] = true;
@@ -256,7 +254,7 @@ export default class TreeStore {
 
   setCheckedKeys(keys, leafOnly = false) {
     this.defaultCheckedKeys = keys;
-    const key = this.key;
+    const { key } = this;
     const checkedKeys = {};
     keys.forEach((key) => {
       checkedKeys[key] = true;
@@ -265,8 +263,7 @@ export default class TreeStore {
     this._setCheckedKeys(key, leafOnly, checkedKeys);
   }
 
-  setDefaultExpandedKeys(keys) {
-    keys = keys || [];
+  setDefaultExpandedKeys(keys = []) {
     this.defaultExpandedKeys = keys;
 
     keys.forEach((key) => {

@@ -35,7 +35,53 @@ module.exports = {
   module: {
     rules: [{
       test: /\.jsx?$/,
-      loader: 'babel-loader',
+      use: {
+        loader: 'babel-loader',
+        options: {
+          "presets": [
+            "@babel/preset-env",
+            "@babel/preset-react",
+            "@babel/preset-flow",
+
+          ],
+          "plugins": [
+            "react-hot-loader/babel",
+            [
+              "@babel/plugin-transform-runtime",
+              {
+                "corejs": 2
+              }
+            ],
+            "@babel/plugin-syntax-dynamic-import",
+            "@babel/plugin-syntax-import-meta",
+            "@babel/plugin-proposal-class-properties",
+            "@babel/plugin-proposal-json-strings",
+            [
+              "@babel/plugin-proposal-decorators",
+              {
+                "legacy": true
+              }
+            ],
+            "@babel/plugin-proposal-function-sent",
+            "@babel/plugin-proposal-export-namespace-from",
+            "@babel/plugin-proposal-numeric-separator",
+            "@babel/plugin-proposal-throw-expressions",
+            "@babel/plugin-proposal-export-default-from",
+            "@babel/plugin-proposal-logical-assignment-operators",
+            "@babel/plugin-proposal-optional-chaining",
+            [
+              "@babel/plugin-proposal-pipeline-operator",
+              {
+                "proposal": "minimal"
+              }
+            ],
+            "@babel/plugin-proposal-nullish-coalescing-operator",
+            "@babel/plugin-proposal-do-expressions"
+          ]
+        }
+      },
+      exclude: /node_modules/,
+
       include: [
         path.join(basePath, 'site'),
         path.join(basePath, 'src'),

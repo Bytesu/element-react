@@ -38,7 +38,11 @@ export default function Message(props = {}, type) {
     }
   }));
 
-  ReactDOM.render(component, div);
+  // ReactDOM.render(component, div);
+  return ReactDOM.createPortal(
+    component,
+    div
+  );
 }
 
 /* eslint-disable */

@@ -1,6 +1,11 @@
 
-import {createContext} from 'react';
+import { createContext } from 'react';
 
-const ParentContext = createContext(null);
+const ParentContext = createContext({});
 ParentContext.displayName = 'ParentContext';
-export default  ParentContext;
+
+const RowContext = createContext({});
+RowContext.displayName = 'RowContext';
+ParentContext.RowContext = RowContext;
+
+export default ParentContext;

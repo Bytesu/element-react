@@ -13,6 +13,8 @@
 2. `removed refs`
 3. `add UNSAFE_`
 4. `removed contextTypes/getChildContext/childContextTypes and add contextType`
+5. `upgrade webpack to v5.x`
+6. `upgrade babel to v7.12.x`
 
 ### Install
 

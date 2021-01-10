@@ -1,5 +1,7 @@
 /* @flow */
-
+export class RawFile extends File {
+  uid: number;
+}
 // 自定义file类型
 export type _File = {
   status: string,
@@ -24,9 +26,6 @@ export type IframeUploadState = {
   frameName: string
 };
 
-export class RawFile extends File {
-  uid: number;
-}
 
 export class _ProgressEvent extends ProgressEvent {
   percent: number;

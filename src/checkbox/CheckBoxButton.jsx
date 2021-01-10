@@ -2,8 +2,10 @@
 
 import React from 'react';
 import CheckBox from './CheckBox';
+import { ParentContext} from "../../libs";
 
 export default class CheckboxButton extends CheckBox {
+  static contextType =ParentContext;
   static elementType = 'CheckboxButton';
 
   render(): React.DOM {

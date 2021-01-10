@@ -36,7 +36,7 @@ export type TimeSpinnerProps = {
   minutes: ?number,
   seconds: ?number,
   isShowSeconds: boolean,
-  //[[datefrom, dateend]...]
+  // [[datefrom, dateend]...]
   selectableRange: TimeSpinnerSelectableRange,
   onChange: (e: {TimeTypes: number})=>void,
   onSelectRangeChange: TimeSpinnerOnSelectRangeChange
@@ -130,7 +130,7 @@ export interface BasePickerProps {
   value: Date | Date[]
 }
 
-export type DatePickerProps =  BasePickerProps & {
+export type DatePickerProps = BasePickerProps & {
   value: ?Date,
   isShowTime: boolean,
   showWeekNumber: boolean,

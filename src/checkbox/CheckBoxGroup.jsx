@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from "react";
-import { Component, PropTypes } from "../../libs";
+import { Component, ParentContext,PropTypes } from "../../libs";
 
 type State = {
   options: Array<string | number>
@@ -26,11 +26,11 @@ export default class CheckboxGroup extends Component {
     }
   }
 
-  getChildContext(): { ElCheckboxGroup: CheckboxGroup } {
-    return {
-      ElCheckboxGroup: this
-    };
-  }
+  // getChildContext(): { ElCheckboxGroup: CheckboxGroup } {
+  //   return {
+  //     ElCheckboxGroup: this
+  //   };
+  // }
 
   onChange(value: string | number, checked: boolean): void {
     const index = this.state.options.indexOf(value);
@@ -84,17 +84,20 @@ export default class CheckboxGroup extends Component {
       );
     });
 
-    return (
+    return (<ParentContext.Provider
+        value={{ ElCheckboxGroup: this}}
+      >
       <div style={this.style()} className={this.className("el-checkbox-group")}>
         {children}
       </div>
+      </ParentContext.Provider>
     );
   }
 }
 
-CheckboxGroup.childContextTypes = {
-  ElCheckboxGroup: PropTypes.any
-};
+// CheckboxGroup.childContextTypes = {
+//   ElCheckboxGroup: PropTypes.any
+// };
 
 CheckboxGroup.propTypes = {
   min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

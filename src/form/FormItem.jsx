@@ -2,7 +2,7 @@
 
 import React from 'react';
 import AsyncValidator from 'async-validator';
-import { Component, PropTypes, Transition } from '../../libs';
+import {Component, ParentContext, PropTypes, Transition} from '../../libs';
 
 type State = {
   error: string,
@@ -23,28 +23,28 @@ export default class FormItem extends Component {
     }
   }
 
-  getChildContext(): Object {
-    return {
-      form: this
-    };
-  }
+  // getChildContext(): Object {
+  //   return {
+  //     form: this
+  //   };
+  // }
 
   componentDidMount() {
-    const { prop } = this.props;
+    const {prop} = this.props;
 
     if (prop) {
-      this.parent().addField(this);
+      this.parent().addField && this.parent().addField(this);
 
       this.initialValue = this.getInitialValue();
     }
   }
 
   UNSAFE_componentWillUnmount(): void {
-    this.parent().removeField(this);
+    this.parent().removeField && this.parent().removeField(this);
   }
 
   parent(): Component {
-    return this.context.component;
+    return this.context.component || {props: {}};
   }
 
   isRequired(): boolean {
@@ -93,13 +93,13 @@ export default class FormItem extends Component {
       return true;
     }
 
-    this.setState({ validating: true });
+    this.setState({validating: true});
 
-    const descriptor = { [this.props.prop]: rules };
+    const descriptor = {[this.props.prop]: rules};
     const validator = new AsyncValidator(descriptor);
-    const model = { [this.props.prop]: this.fieldValue() };
+    const model = {[this.props.prop]: this.fieldValue()};
 
-    validator.validate(model, { firstFields: true }, errors => {
+    validator.validate(model, {firstFields: true}, errors => {
       this.setState({
         error: errors ? errors[0].message : '',
         validating: false,
@@ -113,7 +113,7 @@ export default class FormItem extends Component {
   }
 
   getInitialValue(): string | void {
-    const value = this.parent().props.model[this.props.prop];
+    const value = this.parent().props.model && this.parent().props.model[this.props.prop];
 
     if (value === undefined) {
       return value;
@@ -123,12 +123,12 @@ export default class FormItem extends Component {
   }
 
   resetField(): void {
-    let { valid, error } = this.state;
+    let {valid, error} = this.state;
 
     valid = true;
     error = '';
 
-    this.setState({ valid, error });
+    this.setState({valid, error});
 
     let value = this.fieldValue();
 
@@ -192,14 +192,16 @@ export default class FormItem extends Component {
 
   fieldValue(): mixed {
     const model = this.parent().props.model;
-    if (!model || !this.props.prop) { return; }
+    if (!model || !this.props.prop) {
+      return;
+    }
     const temp = this.props.prop.split(':');
     return temp.length > 1 ? model[temp[0]][temp[1]] : model[this.props.prop];
   }
 
   render(): React.DOM {
-    const { error, validating } = this.state;
-    const { label, required } = this.props;
+    const {error, validating} = this.state;
+    const {label, required} = this.props;
 
     return (
       <div style={this.style()} className={this.className('el-form-item', {
@@ -211,35 +213,36 @@ export default class FormItem extends Component {
           label && (
             <label className="el-form-item__label" style={this.labelStyle()}>
               {
-                typeof(label) === 'string'?
-                label + this.parent().props.labelSuffix :
-                label
+                typeof (label) === 'string' ?
+                  label + this.parent().props.labelSuffix :
+                  label
               }
             </label>
           )
         }
         <div className="el-form-item__content" style={this.contentStyle()}>
-          {this.props.children}
+          <ParentContext.Provider value={{form: this}}>
+            {this.props.children}
+          </ParentContext.Provider>
           <Transition name="el-zoom-in-top"
                       domRef={this.domRef}
           >
-            { error && <div className="el-form-item__error"
-                            ref={this.domRef}
-            >{error}</div> }
+            {error && <div className="el-form-item__error"
+                           ref={this.domRef}
+            >{error}</div>}
           </Transition>
         </div>
       </div>
+
     )
   }
 }
 
-FormItem.contextTypes = {
-  component: PropTypes.any
-};
+FormItem.contextType = ParentContext;
 
-FormItem.childContextTypes = {
-  form: PropTypes.any
-};
+// FormItem.childContextTypes = {
+//   form: PropTypes.any
+// };
 
 FormItem.propTypes = {
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),

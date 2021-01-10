@@ -34,7 +34,7 @@ export default function upload(option) {
   }
 
   const xhr = new XMLHttpRequest();
-  const action = option.action;
+  const { action } = option;
 
   if (xhr.upload) {
     xhr.upload.onprogress = function progress(e) {
@@ -48,7 +48,7 @@ export default function upload(option) {
   const formData = new FormData();
 
   if (option.data) {
-    Object.keys(option.data).map(key => {
+    Object.keys(option.data).forEach((key) => {
       formData.append(key, option.data[key]);
     });
   }
@@ -61,10 +61,10 @@ export default function upload(option) {
 
   xhr.onload = function onload() {
     if (xhr.status < 200 || xhr.status >= 300) {
-      return option.onError(getError(action, option, xhr));
+      option.onError(getError(action, option, xhr));
+    } else {
+      option.onSuccess(getBody(xhr));
     }
-
-    option.onSuccess(getBody(xhr));
   };
 
   xhr.open('post', action, true);
@@ -75,11 +75,9 @@ export default function upload(option) {
 
   const headers = option.headers || {};
 
-  for (let item in headers) {
-    if (headers.hasOwnProperty(item) && headers[item] !== null) {
-      xhr.setRequestHeader(item, headers[item]);
-    }
-  }
+  Object.keys(headers).forEach((key) => {
+    !!headers[key] && xhr.setRequestHeader(key, headers[key]);
+  })
   xhr.send(formData);
   return xhr;
 }

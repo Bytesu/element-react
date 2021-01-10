@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PropTypes, Component } from '../../libs';
+import { PropTypes,ParentContext, Component } from '../../libs';
 import { EventRegister } from '../../libs/internal'
 
 import Input from '../input'
@@ -241,6 +241,7 @@ export default class BasePicker extends Component {
       return
     }
     if (this.domRoot.contains(evt.target)) return
+    debugger;
     if (this.pickerProxy && this.pickerProxy.contains(evt)) return
     if (this.isDateValid(value)) {
       this.setState({ pickerVisible: false })
@@ -319,7 +320,6 @@ export default class BasePicker extends Component {
         return null
       }
     }
-
     return (
       <span
         className={this.classNames('el-date-editor', className, {
@@ -362,7 +362,6 @@ export default class BasePicker extends Component {
           value={text}
           icon={createIconSlot()}
         />
-
         {createPickerPanel()}
       </span>
     )
@@ -370,6 +369,4 @@ export default class BasePicker extends Component {
 }
 
 
-BasePicker.contextTypes = {
-  form: PropTypes.any
-};
+BasePicker.contextType =ParentContext;

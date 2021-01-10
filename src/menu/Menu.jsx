@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes } from '../../libs';
+import { Component, ParentContext,PropTypes } from '../../libs';
 
 type State = {
   activeIndex: number,
@@ -27,11 +27,11 @@ export default class Menu extends Component {
     }
   }
 
-  getChildContext(): { component: Menu } {
-    return {
-      component: this
-    };
-  }
+  // getChildContext(): { component: Menu } {
+  //   return {
+  //     component: this
+  //   };
+  // }
 
   componentDidMount() {
     this.openActiveItemMenus();
@@ -49,7 +49,6 @@ export default class Menu extends Component {
 
   openMenu(index: number, indexPath: Array<number>): void {
     let { openedMenus } = this.state;
-
     if (openedMenus.indexOf(index) !== -1) return;
     // 将不在该菜单路径下的其余菜单收起
     if (this.props.uniqueOpened) {
@@ -133,10 +132,8 @@ export default class Menu extends Component {
 
     this.setState({ activeIndex: value }, () => {
       if (!menuItems[value]) return;
-
       let menuItem = menuItems[value];
       let indexPath = menuItem.indexPath();
-
       this.handleSelect(value, indexPath, menuItem);
     });
   }
@@ -148,7 +145,9 @@ export default class Menu extends Component {
   }
 
   render(): React.DOM {
-    return (
+    return (<ParentContext.Provider value={{
+        component: this
+      }}>
       <ul
         style={this.style()}
         className={this.className("el-menu", {
@@ -158,13 +157,14 @@ export default class Menu extends Component {
       >
         {this.props.children}
       </ul>
+      </ParentContext.Provider>
     )
   }
 }
 
-Menu.childContextTypes = {
-  component: PropTypes.any
-};
+// Menu.childContextTypes = {
+//   component: PropTypes.any
+// };
 
 Menu.propTypes = {
   mode: PropTypes.string,

@@ -14,7 +14,7 @@ const RE_NARGS = /(%|)\{([0-9a-zA-Z_]+)\}/g;
  * @return {String}
  */
 
-export default function(string, ...args) {
+export default function (string, ...args) {
   if (args.length === 1 && typeof args[0] === 'object') {
     args = args[0];
   }
@@ -26,16 +26,15 @@ export default function(string, ...args) {
   return string.replace(RE_NARGS, (match, prefix, i, index) => {
     let result;
 
-    if (string[index - 1] === '{' &&
-      string[index + match.length] === '}') {
+    if (string[index - 1] === '{'
+      && string[index + match.length] === '}') {
       return i;
-    } else {
-      result = Object.prototype.hasOwnProperty.call(args, i) ? args[i] : null;
-      if (result === null || result === undefined) {
-        return '';
-      }
-
-      return result;
     }
+    result = Object.prototype.hasOwnProperty.call(args, i) ? args[i] : null;
+    if (result === null || result === undefined) {
+      return '';
+    }
+
+    return result;
   });
 }

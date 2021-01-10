@@ -1,9 +1,9 @@
 export class IDGenerator {
-  constructor(){
+  constructor() {
     this.id = 0
   }
 
-  next(){
+  next() {
     return this.id++ & 0xffff
   }
 }

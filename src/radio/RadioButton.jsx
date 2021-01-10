@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes } from '../../libs';
+import { Component,ParentContext, PropTypes } from '../../libs';
 
 import Radio from './Radio';
 
@@ -50,9 +50,7 @@ export default class RadioButton extends Radio {
   }
 }
 
-RadioButton.contextTypes = {
-  component: PropTypes.any
-};
+RadioButton.contextType =ParentContext;
 
 RadioButton.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

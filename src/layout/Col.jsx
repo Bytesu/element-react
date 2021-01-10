@@ -1,8 +1,8 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes } from '../../libs';
-
+import { Component,ParentContext, PropTypes } from '../../libs';
+const {RowContext} = ParentContext;
 export default class Col extends Component {
   getStyle(): { paddingLeft: string, paddingRight: string } {
     const style = {};
@@ -50,9 +50,7 @@ export default class Col extends Component {
   }
 }
 
-Col.contextTypes = {
-  gutter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-};
+Col.contextType = RowContext;
 
 Col.propTypes = {
   span: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

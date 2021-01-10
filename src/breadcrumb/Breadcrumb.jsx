@@ -1,31 +1,34 @@
 /* @flow */
 
 import React from 'react';
-import { Component, PropTypes } from '../../libs';
+import { Component,ParentContext, PropTypes } from '../../libs';
 
 type Context = {
   separator: string
 };
 
 export default class Breadcrumb extends Component {
-  getChildContext(): Context {
-    return {
-      separator: this.props.separator
-    };
-  }
+  // getChildContext(): Context {
+  //   return {
+  //     separator: this.props.separator
+  //   };
+  // }
 
   render() {
     return (
-      <div style={this.style()} className={this.className('el-breadcrumb')}>
+      <ParentContext.Provider
+        value={{separator: this.props.separator}}
+      > <div style={this.style()} className={this.className('el-breadcrumb')}>
         {this.props.children}
       </div>
+      </ParentContext.Provider>
     )
   }
 }
 
-Breadcrumb.childContextTypes = {
-  separator: PropTypes.string
-};
+// Breadcrumb.childContextTypes = {
+//   separator: PropTypes.string
+// };
 
 Breadcrumb.propTypes = {
   separator: PropTypes.string

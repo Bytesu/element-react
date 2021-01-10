@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
-import type { _Column } from "./Types";
+import type { _Column } from './Types';
 
 const _document = (document: any);
 
 let scrollBarWidth: ?number;
 
 export const cleanScrollBar = () => {
-  document.querySelectorAll('.el-table__body-wrapper').forEach(el => {
+  document.querySelectorAll('.el-table__body-wrapper').forEach((el) => {
     setTimeout(() => {
       el.style.overflow = 'hidden';
       setTimeout(() => el.style.overflow = 'auto');
@@ -44,7 +44,7 @@ export function getValueByPath(data: Object, path: ?string): any {
 export function getRowIdentity(row: Object, rowKey: any): any {
   if (typeof rowKey === 'string') {
     return getValueByPath(row, rowKey);
-  } else if (typeof rowKey === 'function') {
+  } if (typeof rowKey === 'function') {
     return rowKey(row);
   }
 }
@@ -136,24 +136,24 @@ export function convertToRows(columns: Array<_Column>): Array<Array<_Column>> {
 const checkType = (data: any): string => Object.prototype.toString.call(data).toLowerCase().slice(8, -1);
 
 const deepCompare = (obj1: any, obj2: any): boolean => {
-    const obj1Type = checkType(obj1);
-    const obj2Type = checkType(obj2);
-    if (obj1Type !== obj2Type ) return false;
-  
-    if (obj1Type === 'array' && obj1.length === obj2.length) {
-        return obj1.every((value, key) => (
-            deepCompare(value, obj2[key])
-        ))
-    } 
-  
-    if (obj1Type === 'object') {
-        for (let key in obj1) {
-            if (!Object.keys(obj2).includes(key)) return false;
-            return deepCompare(obj1[key], obj2[key])
-        }
-        return false
+  const obj1Type = checkType(obj1);
+  const obj2Type = checkType(obj2);
+  if (obj1Type !== obj2Type) return false;
+
+  if (obj1Type === 'array' && obj1.length === obj2.length) {
+    return obj1.every((value, key) => (
+      deepCompare(value, obj2[key])
+    ))
+  }
+
+  if (obj1Type === 'object') {
+    for (const key in obj1) {
+      if (!Object.keys(obj2).includes(key)) return false;
+      return deepCompare(obj1[key], obj2[key])
     }
-    return Object.is(obj1,obj2);
+    return false
+  }
+  return Object.is(obj1, obj2);
 }
 
 export {

@@ -25,6 +25,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+
     this.setPage(() => {
       if (!this.state.locale) {
         this.setLocale(localStorage.getItem('ELEMENT_LANGUAGE') || 'zh-CN');

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { throttle } from 'throttle-debounce';
-import { Component, PropTypes, Transition, View } from '../../libs';
+import { Component, ParentContext,PropTypes, Transition, View } from '../../libs';
 import { addResizeListener, removeResizeListener } from '../../libs/utils/resize-event';
 
 type State = {
@@ -44,11 +44,11 @@ export default class Carousel extends Component {
     this.resetItemPosition = this._resetItemPosition.bind(this)
   }
 
-  getChildContext(): Context {
-    return {
-      component: this
-    };
-  }
+  // getChildContext(): Context {
+  //   return {
+  //     component: this
+  //   };
+  // }
 
   componentDidMount() {
 
@@ -220,6 +220,9 @@ export default class Carousel extends Component {
     const { height, arrow, indicatorPosition } = this.props;
     const { hover, activeIndex, items } = this.state;
     return (
+      <ParentContext.Provider
+        value={{parent:this}}
+      >
       <div
         ref="root"
         className={this.className('el-carousel', { 'el-carousel--card': this.iscard })}
@@ -292,13 +295,14 @@ export default class Carousel extends Component {
           )
         }
       </div>
+      </ParentContext.Provider>
     )
   }
 }
 
-Carousel.childContextTypes = {
-  component: PropTypes.any
-};
+// Carousel.childContextTypes = {
+//   component: PropTypes.any
+// };
 
 Carousel.propTypes = {
   initialIndex: PropTypes.number,

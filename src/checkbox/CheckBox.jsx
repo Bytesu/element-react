@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react'
-import { Component, PropTypes } from '../../libs'
+import { Component,ParentContext, PropTypes } from '../../libs'
 
 type State = {
   checked: boolean,
@@ -115,9 +115,7 @@ export default class Checkbox extends Component {
   }
 }
 
-Checkbox.contextTypes = {
-  ElCheckboxGroup: PropTypes.any
-};
+Checkbox.contextType = ParentContext;
 
 Checkbox.propTypes = {
   label: PropTypes.string,

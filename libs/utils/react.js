@@ -6,4 +6,4 @@ function firstChild(props) {
   return childrenArray[0] || null;
 }
 
-export {firstChild}
+export { firstChild }

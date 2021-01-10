@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { PropTypes, View, Transition, CollapseTransition } from '../../libs';
+import {CollapseTransition, ParentContext, PropTypes, Transition, View} from '../../libs';
 
 import MixinComponent from './MixinComponent';
 
@@ -24,11 +24,12 @@ export default class SubMenu extends MixinComponent {
     };
   }
 
-  getChildContext(): { component: SubMenu } {
-    return {
-      component: this
-    };
-  }
+  //
+  // getChildContext(): { component: SubMenu } {
+  //   return {
+  //     component: this
+  //   };
+  // }
 
   componentDidMount() {
     this.rootMenu().state.submenus[this.props.index] = this;
@@ -46,15 +47,16 @@ export default class SubMenu extends MixinComponent {
   }
 
   handleMouseenter(): void {
-    clearTimeout(this.timeout);
+    this.timeout && clearTimeout(this.timeout);
 
     this.timeout = setTimeout(() => {
+      console.log(this.rootMenu());
       this.rootMenu().openMenu(this.props.index, this.indexPath());
     }, 300);
   }
 
   handleMouseleave(): void {
-    clearTimeout(this.timeout);
+    this.timeout && clearTimeout(this.timeout);
 
     this.timeout = setTimeout(() => {
       this.rootMenu().closeMenu(this.props.index, this.indexPath());
@@ -79,45 +81,49 @@ export default class SubMenu extends MixinComponent {
   }
 
   render(): React.DOM {
-    return (
-      <li style={this.style()} className={this.className('el-submenu', {
-        'is-active': this.state.active,
-        'is-opened': this.opened()
-      })}>
-        <div ref="submenu-title" className="el-submenu__title">
-          {this.props.title}
-          <i className={this.classNames('el-submenu__icon-arrow', {
+    return (<ParentContext.Provider
+        value={{
+          component: this
+        }}
+      >
+        <li style={this.style()} className={this.className('el-submenu', {
+          'is-active': this.state.active,
+          'is-opened': this.opened()
+        })}>
+          <div ref="submenu-title" className="el-submenu__title">
+            {this.props.title}
+            <i className={this.classNames('el-submenu__icon-arrow', {
               'el-icon-arrow-down': this.rootMenu().props.mode === 'vertical',
               'el-icon-caret-bottom': this.rootMenu().props.mode === 'horizontal'
             })}>
-          </i>
-        </div>
-        {
-          this.rootMenu().props.mode === 'horizontal' ? (
-            <Transition name="el-zoom-in-top"
-                        domRef={this.domRef}
-            >
-              <View show={this.opened()}
-                    ref={this.domRef}
+            </i>
+          </div>
+          {
+            this.rootMenu().props.mode === 'horizontal' ? (
+              <Transition name="el-zoom-in-top"
+                // domRef={this.domRef}
               >
+                <View show={this.opened()}
+                  // ref={this.domRef}
+                >
+                  <ul className="el-menu">{this.props.children}</ul>
+                </View>
+              </Transition>
+            ) : (
+              <CollapseTransition isShow={this.opened()}>
                 <ul className="el-menu">{this.props.children}</ul>
-              </View>
-            </Transition>
-          ) : (
-            <CollapseTransition isShow={this.opened()}>
-              <ul className="el-menu">{this.props.children}</ul>
-            </CollapseTransition>
-          )
-        }
-
-      </li>
+              </CollapseTransition>
+            )
+          }
+        </li>
+      </ParentContext.Provider>
     )
   }
 }
 
-SubMenu.childContextTypes = {
-  component: PropTypes.any
-};
+// SubMenu.childContextTypes = {
+//   component: PropTypes.any
+// };
 
 SubMenu.propTypes = {
   index: PropTypes.string.isRequired

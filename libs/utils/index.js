@@ -1,17 +1,18 @@
-import {require_condition} from './assert'
+import { require_condition } from './assert'
 import * as ReactUtils from './react'
 import * as Errors from './errors'
 
-export {require_condition, ReactUtils, Errors}
+export { require_condition, ReactUtils, Errors }
 
 export function watchPropertyChange(target, property, cb) {
   require_condition(
-    target != null &&
-    typeof property === 'string' &&
-    typeof cb === 'function', 'invalid arguments')
+    target != null
+    && typeof property === 'string'
+    && typeof cb === 'function', 'invalid arguments'
+  )
 
   let cache = null
-  if (!target.__watch_cache){
+  if (!target.__watch_cache) {
     target.__watch_cache = {}
   }
   cache = target.__watch_cache
@@ -30,14 +31,14 @@ export function watchPropertyChange(target, property, cb) {
 
     set(value) {
       origin = value
-      if (cache[property]){
+      if (cache[property]) {
         cache[property](origin)
       }
     }
   })
 
-  return ()=>{
-    if (target.__watch_cache && target.__watch_cache[property]){
+  return () => {
+    if (target.__watch_cache && target.__watch_cache[property]) {
       delete target.__watch_cache[property]
       delete target[property]
       target[property] = origin
@@ -52,17 +53,16 @@ export function createPropType(validate) {
     if (props[propName] == null) {
       if (isRequired) {
         return new Error(
-          ("Required `" + propName + "` was not specified in ") +
-          ("`" + componentName + "`.")
+          `Required \`${propName}\` was not specified in `
+          + `\`${componentName}\`.`
         );
       }
       return null;
-    } else {
-      return validate(props, propName, componentName);
     }
+    return validate(props, propName, componentName);
   }
 
-  let chainedCheckType = checkType.bind(null, false);
+  const chainedCheckType = checkType.bind(null, false);
   chainedCheckType.isRequired = checkType.bind(null, true);
 
   return chainedCheckType;
@@ -70,21 +70,21 @@ export function createPropType(validate) {
 
 // take from :  http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
 export function hashCode(str) {
-  if (str == null||str.length === 0) return 0
-	let hash = 0;
-	for (let i = 0; i < str.length; i++) {
-		let char = str.charCodeAt(i);
-		hash = ((hash<<5)-hash)+char;
-		hash = hash & hash; // Convert to 32bit integer
-	}
-	return hash;
+  if (str == null || str.length === 0) return 0
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash &= hash; // Convert to 32bit integer
+  }
+  return hash;
 }
 
 export function pick(obj, keys) {
   require_condition(obj != null && Array.isArray(keys))
 
   const r = {}
-  keys.forEach(e=> r[e]= obj[e])
+  keys.forEach(e => r[e] = obj[e])
   return r
 }
 
@@ -97,16 +97,16 @@ export function range(start, stop, step) {
     step = stop < start ? -1 : 1;
   }
 
-  var length = Math.max(Math.ceil((stop - start) / step), 0);
-  var range = Array(length);
+  const length = Math.max(Math.ceil((stop - start) / step), 0);
+  const range = Array(length);
 
-  for (var idx = 0; idx < length; idx++, start += step) {
+  for (let idx = 0; idx < length; idx++, start += step) {
     range[idx] = start;
   }
 
   return range;
 }
 
-export {default as DateUtils} from './date'
+export { default as DateUtils } from './date'
 export * from './popper-mixins'
-export {IDGenerator} from './IDGenerator'
+export { IDGenerator } from './IDGenerator'

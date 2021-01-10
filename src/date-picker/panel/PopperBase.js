@@ -1,10 +1,10 @@
 import { PropTypes, Component } from '../../../libs';
 import { PopperReactMixin } from '../../../libs/utils'
 
-export class PopperBase extends Component{
+export class PopperBase extends Component {
   static get propTypes() {
     return {
-      //()=>HtmlElement
+      // ()=>HtmlElement
       getPopperRefElement: PropTypes.func,
       popperMixinOption: PropTypes.object
     }

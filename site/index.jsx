@@ -20,15 +20,15 @@ function inChinaConfirm() {
 }
 
 function inChina() {
-  if (window.fetch && document.domain !== 'element-react.faas.ele.me') {
-    fetch('//restapi.amap.com/v3/ip?output=JSON&key=53a87f7c6a6d173be31d4123958ad5c2')
-      .then(res => res.json())
-      .then(({ city }) => {
-        if (city && typeof city === 'string') {
-          inChinaConfirm();
-        }
-      })
-  }
+  // if (window.fetch && document.domain !== 'element-react.faas.ele.me') {
+  //   fetch('//restapi.amap.com/v3/ip?output=JSON&key=53a87f7c6a6d173be31d4123958ad5c2')
+  //     .then(res => res.json())
+  //     .then(({ city }) => {
+  //       if (city && typeof city === 'string') {
+  //         inChinaConfirm();
+  //       }
+  //     })
+  // }
 }
 
 render(<StrictMode><AppContainer><App /></AppContainer></StrictMode>, document.getElementById('app'), inChina);

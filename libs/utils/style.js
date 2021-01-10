@@ -1,9 +1,9 @@
-exports.reset = css => {
+exports.reset = (css) => {
   const style = document.createElement('style');
 
   style.type = 'text/css';
 
-  if (style.styleSheet){
+  if (style.styleSheet) {
     style.styleSheet.cssText = css;
   } else {
     style.appendChild(document.createTextNode(css));

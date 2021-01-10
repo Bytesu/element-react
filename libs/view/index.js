@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
  */
 const View = React.forwardRef((props, ref) => {
   const classNames = [];
-  const {show = true, className = '', children} = props;
-  const mixed = {style: {...children.props.style, ref}};
+  const { show = true, className = '', children } = props;
+  const mixed = { style: { ...children.props.style, ref } };
   if (!show) mixed.style.display = 'none';
   if (children.props.className) classNames.push(children.props.className);
   if (className) classNames.push(className);
